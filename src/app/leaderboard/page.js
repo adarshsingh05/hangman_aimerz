@@ -1,6 +1,7 @@
 // app/leaderboard/page.js
 "use client";
 import React, { useEffect, useState } from "react";
+import Link from "next/link";
 
 export default function Leaderboard() {
   const [top, setTop] = useState([]);
@@ -78,18 +79,18 @@ export default function Leaderboard() {
           
           {/* Navigation */}
           <div className="flex justify-center gap-4 mt-8">
-            <a 
+            <Link 
               href="/game" 
               className="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white text-sm font-medium rounded transition-colors"
             >
               Play Game
-            </a>
-            <a 
+            </Link>
+            <Link 
               href="/" 
               className="px-4 py-2 border border-gray-300 dark:border-gray-600 hover:bg-gray-50 dark:hover:bg-gray-700 text-sm font-medium rounded transition-colors"
             >
               Back to Home
-            </a>
+            </Link>
           </div>
         </div>
       </div>

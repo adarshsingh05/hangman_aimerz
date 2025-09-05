@@ -199,7 +199,7 @@ export default function DashboardPage() {
           {userStats?.gamesPlayed === 0 ? (
             <div className="text-center py-8">
               <div className="text-6xl mb-4">🎮</div>
-              <p className="text-gray-600 dark:text-gray-300 mb-4">You haven't played any games yet!</p>
+              <p className="text-gray-600 dark:text-gray-300 mb-4">You haven&apos;t played any games yet!</p>
               <Link
                 href="/game"
                 className="inline-block px-6 py-3 bg-indigo-600 hover:bg-indigo-700 text-white font-semibold rounded-lg transition-colors"

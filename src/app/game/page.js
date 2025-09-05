@@ -1,9 +1,10 @@
 // app/game/page.js
 "use client";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, Suspense } from "react";
 import { useSearchParams } from "next/navigation";
+import Link from "next/link";
 
-export default function GamePage() {
+function GameContent() {
   const [word, setWord] = useState("");
   const [guessed, setGuessed] = useState(new Set());
   const [input, setInput] = useState("");
@@ -16,9 +17,58 @@ export default function GamePage() {
   const searchParams = useSearchParams();
 
   useEffect(() => {
+    const checkAuth = async () => {
+      try {
+        const mode = searchParams.get("mode");
+        if (mode === "guest") {
+          setIsGuest(true);
+          setLoading(false);
+          return;
+        }
+
+        const response = await fetch("/api/auth/me");
+        const data = await response.json();
+        
+        if (data.user) {
+          setUser(data.user);
+          localStorage.setItem("user", JSON.stringify(data.user));
+        } else {
+          setIsGuest(true);
+        }
+      } catch (error) {
+        console.error("Auth check failed:", error);
+        setIsGuest(true);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    const resetGame = async () => {
+      try {
+        const res = await fetch("/api/game/random");
+        const json = await res.json();
+        
+        if (res.ok && json.word) {
+          const w = json.word.toLowerCase();
+          console.log("Random word received:", w);
+          setWord(w);
+          setGuessed(new Set());
+          setWrong(0);
+          setStatus("playing");
+          setInput("");
+        } else {
+          console.error("Failed to get random word:", json.error);
+          alert("Failed to load a word. Please try again.");
+        }
+      } catch (error) {
+        console.error("Error fetching random word:", error);
+        alert("Network error. Please check your connection and try again.");
+      }
+    };
+
     checkAuth();
     resetGame();
-  }, []);
+  }, [searchParams]);
 
   const checkAuth = async () => {
     try {
@@ -76,14 +126,14 @@ export default function GamePage() {
   function renderHangman() {
     const stages = [
       // 0 wrong guesses - empty gallows
-      <div className="w-40 h-48 mx-auto relative">
+      <div key="stage-0" className="w-40 h-48 mx-auto relative">
         <div className="absolute top-0 left-1/2 transform -translate-x-1/2 w-24 h-1 bg-gray-600 dark:bg-gray-400"></div>
         <div className="absolute top-0 left-1/2 transform -translate-x-1/2 w-1 h-48 bg-gray-600 dark:bg-gray-400"></div>
         <div className="absolute bottom-0 left-0 w-24 h-1 bg-gray-600 dark:bg-gray-400"></div>
       </div>,
       
       // 1 wrong guess - head
-      <div className="w-40 h-48 mx-auto relative">
+      <div key="stage-1" className="w-40 h-48 mx-auto relative">
         <div className="absolute top-0 left-1/2 transform -translate-x-1/2 w-24 h-1 bg-gray-600 dark:bg-gray-400"></div>
         <div className="absolute top-0 left-1/2 transform -translate-x-1/2 w-1 h-48 bg-gray-600 dark:bg-gray-400"></div>
         <div className="absolute bottom-0 left-0 w-24 h-1 bg-gray-600 dark:bg-gray-400"></div>
@@ -91,7 +141,7 @@ export default function GamePage() {
       </div>,
       
       // 2 wrong guesses - head + body
-      <div className="w-40 h-48 mx-auto relative">
+      <div key="stage-2" className="w-40 h-48 mx-auto relative">
         <div className="absolute top-0 left-1/2 transform -translate-x-1/2 w-24 h-1 bg-gray-600 dark:bg-gray-400"></div>
         <div className="absolute top-0 left-1/2 transform -translate-x-1/2 w-1 h-48 bg-gray-600 dark:bg-gray-400"></div>
         <div className="absolute bottom-0 left-0 w-24 h-1 bg-gray-600 dark:bg-gray-400"></div>
@@ -100,7 +150,7 @@ export default function GamePage() {
       </div>,
       
       // 3 wrong guesses - head + body + left arm
-      <div className="w-40 h-48 mx-auto relative">
+      <div key="stage-3" className="w-40 h-48 mx-auto relative">
         <div className="absolute top-0 left-1/2 transform -translate-x-1/2 w-24 h-1 bg-gray-600 dark:bg-gray-400"></div>
         <div className="absolute top-0 left-1/2 transform -translate-x-1/2 w-1 h-48 bg-gray-600 dark:bg-gray-400"></div>
         <div className="absolute bottom-0 left-0 w-24 h-1 bg-gray-600 dark:bg-gray-400"></div>
@@ -110,7 +160,7 @@ export default function GamePage() {
       </div>,
       
       // 4 wrong guesses - head + body + both arms
-      <div className="w-40 h-48 mx-auto relative">
+      <div key="stage-4" className="w-40 h-48 mx-auto relative">
         <div className="absolute top-0 left-1/2 transform -translate-x-1/2 w-24 h-1 bg-gray-600 dark:bg-gray-400"></div>
         <div className="absolute top-0 left-1/2 transform -translate-x-1/2 w-1 h-48 bg-gray-600 dark:bg-gray-400"></div>
         <div className="absolute bottom-0 left-0 w-24 h-1 bg-gray-600 dark:bg-gray-400"></div>
@@ -121,7 +171,7 @@ export default function GamePage() {
       </div>,
       
       // 5 wrong guesses - head + body + both arms + left leg
-      <div className="w-40 h-48 mx-auto relative">
+      <div key="stage-5" className="w-40 h-48 mx-auto relative">
         <div className="absolute top-0 left-1/2 transform -translate-x-1/2 w-24 h-1 bg-gray-600 dark:bg-gray-400"></div>
         <div className="absolute top-0 left-1/2 transform -translate-x-1/2 w-1 h-48 bg-gray-600 dark:bg-gray-400"></div>
         <div className="absolute bottom-0 left-0 w-24 h-1 bg-gray-600 dark:bg-gray-400"></div>
@@ -133,7 +183,7 @@ export default function GamePage() {
       </div>,
       
       // 6 wrong guesses - complete hangman
-      <div className="w-40 h-48 mx-auto relative">
+      <div key="stage-6" className="w-40 h-48 mx-auto relative">
         <div className="absolute top-0 left-1/2 transform -translate-x-1/2 w-24 h-1 bg-gray-600 dark:bg-gray-400"></div>
         <div className="absolute top-0 left-1/2 transform -translate-x-1/2 w-1 h-48 bg-gray-600 dark:bg-gray-400"></div>
         <div className="absolute bottom-0 left-0 w-24 h-1 bg-gray-600 dark:bg-gray-400"></div>
@@ -297,12 +347,12 @@ export default function GamePage() {
                   >
                     New Word
                   </button>
-                  <a 
+                  <Link 
                     href="/leaderboard" 
                     className="flex-1 px-3 py-2 text-sm border border-gray-300 dark:border-gray-600 hover:bg-gray-50 dark:hover:bg-gray-700 rounded transition-colors text-center"
                   >
                     Leaderboard
-                  </a>
+                  </Link>
                 </div>
               </div>
             ) : (
@@ -350,14 +400,29 @@ export default function GamePage() {
 
                  {/* Navigation */}
          <div className="mt-6 flex justify-center">
-           <a 
+           <Link 
              href="/" 
              className="px-4 py-2 text-sm text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white transition-colors"
            >
              Back to Home
-           </a>
+           </Link>
          </div>
       </div>
     </div>
+  );
+}
+
+export default function GamePage() {
+  return (
+    <Suspense fallback={
+      <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 dark:from-gray-900 dark:to-gray-800 flex items-center justify-center">
+        <div className="text-center">
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-indigo-600 mx-auto mb-4"></div>
+          <p className="text-gray-600 dark:text-gray-300">Loading game...</p>
+        </div>
+      </div>
+    }>
+      <GameContent />
+    </Suspense>
   );
 }
