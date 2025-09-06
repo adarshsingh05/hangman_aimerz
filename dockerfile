@@ -1,6 +1,4 @@
-# -----------------------
 # Stage 1: Install dependencies
-# -----------------------
     FROM node:20-alpine AS deps
     WORKDIR /app
     
@@ -8,9 +6,7 @@
     COPY package.json package-lock.json* ./
     RUN npm ci
     
-    # -----------------------
     # Stage 2: Build the app
-    # -----------------------
     FROM node:20-alpine AS builder
     WORKDIR /app
     
@@ -27,11 +23,12 @@
     COPY .env.production .env
     
     # Build Next.js app
+    ENV NEXT_PRIVATE_TURBOPACK=0
+ENV NEXT_TELEMETRY_DISABLED=1
     RUN npm run build
     
-    # -----------------------
+  
     # Stage 3: Create runtime image
-    # -----------------------
     FROM node:20-alpine AS runner
     WORKDIR /app
     
