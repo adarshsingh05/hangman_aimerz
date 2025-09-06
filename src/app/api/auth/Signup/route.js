@@ -18,7 +18,10 @@ export async function POST(req) {
   const cookie = getSetCookieHeader(token);
 
   return NextResponse.json(
-    { user: { id: user._id, name: user.name, email: user.email } },
+    { 
+      user: { id: user._id, name: user.name, email: user.email },
+      token: token // Include token in response for Authorization header
+    },
     { status: 201, headers: { "Set-Cookie": cookie } }
   );
 }

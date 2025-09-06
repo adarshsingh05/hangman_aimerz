@@ -26,7 +26,11 @@ function GameContent() {
           return;
         }
 
-        const response = await fetch("/api/auth/me");
+        const token = localStorage.getItem("token");
+        const response = await fetch("/api/auth/me", {
+          credentials: "include",
+          headers: token ? { "Authorization": `Bearer ${token}` } : {}
+        });
         const data = await response.json();
         
         if (data.user) {
@@ -45,7 +49,9 @@ function GameContent() {
 
     const resetGame = async () => {
       try {
-        const res = await fetch("/api/game/random");
+        const res = await fetch("/api/game/random", {
+          credentials: "include"
+        });
         const json = await res.json();
         
         if (res.ok && json.word) {
@@ -79,7 +85,11 @@ function GameContent() {
         return;
       }
 
-      const response = await fetch("/api/auth/me");
+      const token = localStorage.getItem("token");
+      const response = await fetch("/api/auth/me", {
+        credentials: "include",
+        headers: token ? { "Authorization": `Bearer ${token}` } : {}
+      });
       const data = await response.json();
       
       if (data.user) {
@@ -98,7 +108,9 @@ function GameContent() {
 
   async function resetGame() {
     try {
-      const res = await fetch("/api/game/random");
+      const res = await fetch("/api/game/random", {
+        credentials: "include"
+      });
       const json = await res.json();
       
       if (res.ok && json.word) {
@@ -235,10 +247,15 @@ function GameContent() {
       const base = 10;
       const score = base + (win ? Math.max(0, maxWrong - wrong) * 2 : 0);
       
+      const token = localStorage.getItem("token");
       const response = await fetch("/api/score/submit", {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
+        headers: { 
+          "Content-Type": "application/json",
+          ...(token ? { "Authorization": `Bearer ${token}` } : {})
+        },
         body: JSON.stringify({ score, win }),
+        credentials: "include"
       });
 
       if (response.ok) {

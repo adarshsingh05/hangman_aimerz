@@ -12,7 +12,11 @@ export default function Home() {
 
   const checkAuth = async () => {
     try {
-      const response = await fetch("/api/auth/me");
+      const token = localStorage.getItem("token");
+      const response = await fetch("/api/auth/me", {
+        credentials: "include",
+        headers: token ? { "Authorization": `Bearer ${token}` } : {}
+      });
       const data = await response.json();
       
       if (data.user) {
@@ -34,15 +38,18 @@ export default function Home() {
         headers: {
           "Content-Type": "application/json",
         },
+        credentials: "include"
       });
       
       // Clear client-side storage
       localStorage.removeItem("user");
+      localStorage.removeItem("token");
       setUser(null);
     } catch (error) {
       console.error("Logout failed:", error);
       // Even if the API call fails, clear client-side storage
       localStorage.removeItem("user");
+      localStorage.removeItem("token");
       setUser(null);
     }
   };

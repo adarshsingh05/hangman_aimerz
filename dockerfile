@@ -10,7 +10,7 @@ WORKDIR /app
 COPY --from=deps /app/node_modules ./node_modules
 # Copy everything needed for build, including package.json
 COPY package.json ./
-COPY .env.production .env.local
+COPY .env.production .env.production
 COPY . .
 COPY lib ./lib
 COPY models ./models

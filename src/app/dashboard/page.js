@@ -13,8 +13,14 @@ export default function DashboardPage() {
     // Check if user is logged in
     const checkAuth = async () => {
       try {
-        const response = await fetch("/api/auth/me");
+        const token = localStorage.getItem("token");
+        console.log("Dashboard checkAuth - token from localStorage:", token);
+        const response = await fetch("/api/auth/me", {
+          credentials: "include",
+          headers: token ? { "Authorization": `Bearer ${token}` } : {}
+        });
         const data = await response.json();
+        console.log("Dashboard checkAuth - response data:", data);
         
         if (data.user) {
           setUser(data.user);
@@ -37,7 +43,11 @@ export default function DashboardPage() {
 
   const fetchUserStats = async () => {
     try {
-      const response = await fetch("/api/auth/me");
+      const token = localStorage.getItem("token");
+      const response = await fetch("/api/auth/me", {
+        credentials: "include",
+        headers: token ? { "Authorization": `Bearer ${token}` } : {}
+      });
       const data = await response.json();
       if (data.user) {
         setUserStats(data.user);
@@ -55,15 +65,18 @@ export default function DashboardPage() {
         headers: {
           "Content-Type": "application/json",
         },
+        credentials: "include"
       });
       
       // Clear client-side storage
       localStorage.removeItem("user");
+      localStorage.removeItem("token");
       router.push("/");
     } catch (error) {
       console.error("Logout failed:", error);
       // Even if the API call fails, clear client-side storage and redirect
       localStorage.removeItem("user");
+      localStorage.removeItem("token");
       router.push("/");
     }
   };

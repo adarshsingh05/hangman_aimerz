@@ -7,7 +7,9 @@ export default function Leaderboard() {
   const [top, setTop] = useState([]);
 
   useEffect(() => {
-    fetch("/api/leaderboard").then((r) => r.json()).then((j) => setTop(j.top || []));
+    fetch("/api/leaderboard", {
+      credentials: "include"
+    }).then((r) => r.json()).then((j) => setTop(j.top || []));
   }, []);
 
   return (

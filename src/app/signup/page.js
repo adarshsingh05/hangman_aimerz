@@ -36,13 +36,15 @@ export default function SignupPage() {
           email: formData.email,
           password: formData.password,
         }),
+        credentials: "include"
       });
 
       const data = await response.json();
 
       if (response.ok) {
-        // Store user data in localStorage for client-side access
+        // Store user data and token in localStorage for client-side access
         localStorage.setItem("user", JSON.stringify(data.user));
+        localStorage.setItem("token", data.token);
         router.push("/dashboard");
       } else {
         setError(data.error || "Signup failed");

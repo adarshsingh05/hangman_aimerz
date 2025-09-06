@@ -19,13 +19,17 @@ export default function LoginPage() {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(formData),
+        credentials: "include"
       });
 
       const data = await response.json();
 
       if (response.ok) {
-        // Store user data in localStorage for client-side access
+        // Store user data and token in localStorage for client-side access
         localStorage.setItem("user", JSON.stringify(data.user));
+        localStorage.setItem("token", data.token);
+        console.log("Login successful, token stored:", data.token);
+        console.log("User stored:", data.user);
         router.push("/dashboard");
       } else {
         setError(data.error || "Login failed");
