@@ -3,20 +3,44 @@ import dbConnect from "../../../../../lib/mongoose";
 import User from "../../../../../models/users";
 import bcrypt from "bcryptjs";
 import { createToken, getSetCookieHeader } from "../../../../../lib/auth";
+
 export async function POST(req) {
-  const { email, password } = await req.json();
-  if (!email || !password) return NextResponse.json({ error: "Missing" }, { status: 400 });
-  await dbConnect();
-  const user = await User.findOne({ email });
-  if (!user) return NextResponse.json({ error: "Invalid credentials" }, { status: 401 });
-  const ok = await bcrypt.compare(password, user.password);
-  if (!ok) return NextResponse.json({ error: "Invalid credentials" }, { status: 401 });
+  try {
+    console.log("POST /login called");
 
-  const token = createToken(user._id.toString());
-  const cookie = getSetCookieHeader(token);
+    const { email, password } = await req.json();
+    console.log("Request body:", { email, password });
 
-  return NextResponse.json(
-    { user: { id: user._id, name: user.name, email: user.email } },
-    { status: 200, headers: { "Set-Cookie": cookie } }
-  );
+    if (!email || !password) {
+      console.error("Missing email or password");
+      return NextResponse.json({ error: "Missing email or password" }, { status: 400 });
+    }
+
+    await dbConnect();
+    console.log("Connected to MongoDB");
+
+    const user = await User.findOne({ email });
+    if (!user) {
+      console.error("User not found:", email);
+      return NextResponse.json({ error: "Invalid credentials" }, { status: 401 });
+    }
+
+    const ok = await bcrypt.compare(password, user.password);
+    if (!ok) {
+      console.error("Password mismatch for user:", email);
+      return NextResponse.json({ error: "Invalid credentials" }, { status: 401 });
+    }
+
+    const token = createToken(user._id.toString());
+    const cookie = getSetCookieHeader(token);
+    console.log("Token created and cookie set");
+
+    return NextResponse.json(
+      { user: { id: user._id, name: user.name, email: user.email } },
+      { status: 200, headers: { "Set-Cookie": cookie } }
+    );
+  } catch (err) {
+    console.error("Login error:", err);
+    return NextResponse.json({ error: "Internal Server Error" }, { status: 500 });
+  }
 }
