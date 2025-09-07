@@ -1,0 +1,42 @@
+name: Deploy to EC2
+
+# When the workflow will run
+on:
+  push:
+    branches:
+      - main          # runs whenever you push to main
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest   # GitHub runner machine
+
+    steps:
+      # Step 1 – Get your repo code onto the runner
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      # Step 2 – SSH into your EC2 and deploy
+      - name: Deploy over SSH
+        uses: appleboy/ssh-action@v0.1.7
+        with:
+          host: ${{ secrets.EC2_HOST }}
+          username: ${{ secrets.EC2_USER }}
+          key: ${{ secrets.EC2_SSH_KEY }}
+          script: |
+            # Go to app folder (or create it if first time)
+            cd ~/hangman_aimerz || mkdir ~/hangman_aimerz && cd ~/hangman_aimerz
+
+            # Pull new code (clone if first time)
+            if [ -d .git ]; then
+              git pull
+            else
+              git clone https://github.com/adarshsingh05/hangman_aimerz.
+            fi
+
+            # Stop & remove old container if it exists
+            docker stop nextjs-app-container || true
+            docker rm nextjs-app-container || true
+
+            # Build a new image and run it
+            docker build -t nextjs-app .
+            docker run -d --restart unless-stopped -p 3000:3000 --name nextjs-app-container nextjs-app
