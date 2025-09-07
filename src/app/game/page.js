@@ -56,7 +56,6 @@ function GameContent() {
         
         if (res.ok && json.word) {
           const w = json.word.toLowerCase();
-          console.log("Random word received:", w);
           setWord(w);
           setGuessed(new Set());
           setWrong(0);
@@ -115,7 +114,6 @@ function GameContent() {
       
       if (res.ok && json.word) {
         const w = json.word.toLowerCase();
-        console.log("Random word received:", w);
         setWord(w);
         setGuessed(new Set());
         setWrong(0);
@@ -271,53 +269,53 @@ function GameContent() {
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 dark:from-gray-900 dark:to-gray-800 flex items-center justify-center">
+      <div className="min-h-screen bg-slate-50 dark:bg-slate-900 flex items-center justify-center">
         <div className="text-center">
-          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-indigo-600 mx-auto mb-4"></div>
-          <p className="text-gray-600 dark:text-gray-300">Loading game...</p>
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-slate-900 dark:border-white mx-auto mb-4"></div>
+          <p className="text-slate-600 dark:text-slate-300 font-medium">Loading game...</p>
         </div>
       </div>
     );
   }
 
   return (
-    <div className="min-h-screen bg-gray-50 dark:bg-gray-900">
-      <div className="max-w-7xl mx-auto px-4 py-6">
+    <div className="min-h-screen bg-slate-50 dark:bg-slate-900">
+      <div className="max-w-7xl mx-auto px-6 py-8">
         {/* Header */}
-        <div className="mb-6">
+        <div className="mb-8">
           <div className="flex items-center justify-between">
             <div>
-              <h1 className="text-2xl font-semibold text-gray-900 dark:text-white">Hangman</h1>
-              <p className="text-sm text-gray-600 dark:text-gray-400 mt-1">Guess the word before the hangman is complete</p>
+              <h1 className="text-3xl font-bold text-slate-900 dark:text-white tracking-tight">Hangman</h1>
+              <p className="text-slate-600 dark:text-slate-300 mt-2">Guess the word before the hangman is complete</p>
             </div>
             
-                         {/* User Status */}
-             <div className="flex items-center gap-3">
-               {user ? (
-                 <div className="bg-white dark:bg-gray-800 px-4 py-2 rounded-lg border border-gray-200 dark:border-gray-700">
-                   <span className="text-sm font-medium text-gray-700 dark:text-gray-300">{user.name}</span>
-                 </div>
-               ) : (
-                 <div className="bg-white dark:bg-gray-800 px-4 py-2 rounded-lg border border-gray-200 dark:border-gray-700">
-                   <span className="text-sm font-medium text-gray-700 dark:text-gray-300">Guest</span>
-                 </div>
-               )}
-             </div>
+            {/* User Status */}
+            <div className="flex items-center gap-3">
+              {user ? (
+                <div className="bg-white dark:bg-slate-800 px-4 py-2 rounded-lg border border-slate-200 dark:border-slate-700 shadow-sm">
+                  <span className="text-sm font-semibold text-slate-700 dark:text-slate-300">{user.name}</span>
+                </div>
+              ) : (
+                <div className="bg-white dark:bg-slate-800 px-4 py-2 rounded-lg border border-slate-200 dark:border-slate-700 shadow-sm">
+                  <span className="text-sm font-semibold text-slate-700 dark:text-slate-300">Guest</span>
+                </div>
+              )}
+            </div>
           </div>
         </div>
 
-        <div className="grid lg:grid-cols-3 gap-6">
+        <div className="grid lg:grid-cols-3 gap-8">
           {/* Hangman Drawing */}
-          <div className="lg:col-span-2 bg-white dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700 p-6">
-            <div className="flex justify-center items-center h-64 mb-4">
+          <div className="lg:col-span-2 bg-white dark:bg-slate-800 rounded-xl border border-slate-200 dark:border-slate-700 p-8 shadow-sm">
+            <div className="flex justify-center items-center h-80 mb-6">
               {renderHangman()}
             </div>
             <div className="text-center">
-              <div className="text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+              <div className="text-base font-semibold text-slate-700 dark:text-slate-300 mb-3">
                 Wrong Guesses: {wrong} / {maxWrong}
               </div>
               {wrong > 0 && (
-                <div className="text-xs text-gray-500">
+                <div className="text-sm text-slate-500 dark:text-slate-400">
                   Wrong letters: {Array.from(guessed).filter(letter => !word.includes(letter)).join(", ")}
                 </div>
               )}
@@ -325,22 +323,22 @@ function GameContent() {
           </div>
 
           {/* Game Controls */}
-          <div className="bg-white dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700 p-6">
-            <div className="mb-6">
-              <div className="text-2xl tracking-widest font-mono text-center py-3 bg-gray-50 dark:bg-gray-700 rounded border">
+          <div className="bg-white dark:bg-slate-800 rounded-xl border border-slate-200 dark:border-slate-700 p-8 shadow-sm">
+            <div className="mb-8">
+              <div className="text-3xl tracking-widest font-mono text-center py-4 bg-slate-50 dark:bg-slate-700 rounded-lg border border-slate-200 dark:border-slate-600">
                 {masked()}
               </div>
-              <div className="text-center mt-2 text-xs text-gray-500">
+              <div className="text-center mt-3 text-sm text-slate-500 dark:text-slate-400 font-medium">
                 {word.length} letters
               </div>
             </div>
 
             {status === "playing" ? (
-              <div className="space-y-4">
-                <form onSubmit={handleGuess} className="space-y-3">
-                  <div className="flex gap-2">
+              <div className="space-y-6">
+                <form onSubmit={handleGuess} className="space-y-4">
+                  <div className="flex gap-3">
                     <input
-                      className="flex-1 border border-gray-300 dark:border-gray-600 rounded px-3 py-2 text-center text-lg font-medium focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500"
+                      className="flex-1 border border-slate-300 dark:border-slate-600 rounded-lg px-4 py-3 text-center text-xl font-semibold focus:border-slate-900 focus:outline-none focus:ring-2 focus:ring-slate-900/20 bg-white dark:bg-slate-700 text-slate-900 dark:text-white transition-colors"
                       value={input}
                       onChange={(e) => setInput(e.target.value.replace(/[^a-zA-Z]/g, ""))}
                       maxLength={1}
@@ -349,63 +347,63 @@ function GameContent() {
                     />
                     <button 
                       type="submit"
-                      className="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white text-sm font-medium rounded transition-colors"
+                      className="px-6 py-3 bg-slate-900 hover:bg-slate-800 text-white font-semibold rounded-lg transition-colors shadow-sm hover:shadow-md"
                     >
                       Guess
                     </button>
                   </div>
                 </form>
                 
-                <div className="flex gap-2">
+                <div className="flex gap-3">
                   <button 
                     type="button" 
                     onClick={resetGame} 
-                    className="flex-1 px-3 py-2 text-sm border border-gray-300 dark:border-gray-600 hover:bg-gray-50 dark:hover:bg-gray-700 rounded transition-colors"
+                    className="flex-1 px-4 py-3 text-sm font-semibold border border-slate-300 dark:border-slate-600 hover:bg-slate-50 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-300 rounded-lg transition-colors"
                   >
                     New Word
                   </button>
                   <Link 
                     href="/leaderboard" 
-                    className="flex-1 px-3 py-2 text-sm border border-gray-300 dark:border-gray-600 hover:bg-gray-50 dark:hover:bg-gray-700 rounded transition-colors text-center"
+                    className="flex-1 px-4 py-3 text-sm font-semibold border border-slate-300 dark:border-slate-600 hover:bg-slate-50 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-300 rounded-lg transition-colors text-center"
                   >
                     Leaderboard
                   </Link>
                 </div>
               </div>
             ) : (
-              <div className="space-y-4">
-                                 {status === "won" ? (
-                   <div className="text-center">
-                     <div className="w-16 h-16 bg-green-50 dark:bg-green-900/20 rounded-lg flex items-center justify-center mx-auto mb-4">
-                       <span className="text-2xl font-bold text-green-600 dark:text-green-400">✓</span>
-                     </div>
-                     <p className="text-lg font-semibold text-green-600 dark:text-green-400 mb-2">You Won!</p>
-                     <p className="text-sm text-gray-600 dark:text-gray-300 mb-4">The word was: <span className="font-mono font-medium">{word}</span></p>
-                     <button 
-                       className="w-full px-4 py-2 bg-green-600 hover:bg-green-700 text-white text-sm font-medium rounded transition-colors" 
-                       onClick={() => submitScore(true)}
-                     >
-                       Submit Score
-                     </button>
-                   </div>
-                 ) : (
-                   <div className="text-center">
-                     <div className="w-16 h-16 bg-red-50 dark:bg-red-900/20 rounded-lg flex items-center justify-center mx-auto mb-4">
-                       <span className="text-2xl font-bold text-red-600 dark:text-red-400">✗</span>
-                     </div>
-                     <p className="text-lg font-semibold text-red-600 dark:text-red-400 mb-2">Game Over</p>
-                     <p className="text-sm text-gray-600 dark:text-gray-300 mb-2">The word was: <span className="font-mono font-medium">{word}</span></p>
-                     <p className="text-xs text-gray-500 mb-4">Better luck next time</p>
-                     <button 
-                       className="w-full px-4 py-2 bg-red-600 hover:bg-red-700 text-white text-sm font-medium rounded transition-colors" 
-                       onClick={() => submitScore(false)}
-                     >
-                       Submit Score
-                     </button>
-                   </div>
-                 )}
+              <div className="space-y-6">
+                {status === "won" ? (
+                  <div className="text-center">
+                    <div className="w-20 h-20 bg-green-50 dark:bg-green-900/20 rounded-xl flex items-center justify-center mx-auto mb-6">
+                      <span className="text-3xl font-bold text-green-600 dark:text-green-400">✓</span>
+                    </div>
+                    <p className="text-xl font-bold text-green-600 dark:text-green-400 mb-3">You Won!</p>
+                    <p className="text-sm text-slate-600 dark:text-slate-300 mb-6">The word was: <span className="font-mono font-semibold text-slate-900 dark:text-white">{word}</span></p>
+                    <button 
+                      className="w-full px-6 py-3 bg-green-600 hover:bg-green-700 text-white font-semibold rounded-lg transition-colors shadow-sm hover:shadow-md" 
+                      onClick={() => submitScore(true)}
+                    >
+                      Submit Score
+                    </button>
+                  </div>
+                ) : (
+                  <div className="text-center">
+                    <div className="w-20 h-20 bg-red-50 dark:bg-red-900/20 rounded-xl flex items-center justify-center mx-auto mb-6">
+                      <span className="text-3xl font-bold text-red-600 dark:text-red-400">✗</span>
+                    </div>
+                    <p className="text-xl font-bold text-red-600 dark:text-red-400 mb-3">Game Over</p>
+                    <p className="text-sm text-slate-600 dark:text-slate-300 mb-3">The word was: <span className="font-mono font-semibold text-slate-900 dark:text-white">{word}</span></p>
+                    <p className="text-xs text-slate-500 dark:text-slate-400 mb-6">Better luck next time</p>
+                    <button 
+                      className="w-full px-6 py-3 bg-red-600 hover:bg-red-700 text-white font-semibold rounded-lg transition-colors shadow-sm hover:shadow-md" 
+                      onClick={() => submitScore(false)}
+                    >
+                      Submit Score
+                    </button>
+                  </div>
+                )}
                 <button 
-                  className="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 hover:bg-gray-50 dark:hover:bg-gray-700 text-sm font-medium rounded transition-colors" 
+                  className="w-full px-6 py-3 border border-slate-300 dark:border-slate-600 hover:bg-slate-50 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-300 font-semibold rounded-lg transition-colors" 
                   onClick={resetGame}
                 >
                   Play Again
@@ -415,15 +413,15 @@ function GameContent() {
           </div>
         </div>
 
-                 {/* Navigation */}
-         <div className="mt-6 flex justify-center">
-           <Link 
-             href="/" 
-             className="px-4 py-2 text-sm text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white transition-colors"
-           >
-             Back to Home
-           </Link>
-         </div>
+        {/* Navigation */}
+        <div className="mt-8 flex justify-center">
+          <Link 
+            href="/" 
+            className="px-6 py-3 text-sm font-semibold text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white transition-colors"
+          >
+            Back to Home
+          </Link>
+        </div>
       </div>
     </div>
   );
@@ -432,10 +430,10 @@ function GameContent() {
 export default function GamePage() {
   return (
     <Suspense fallback={
-      <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 dark:from-gray-900 dark:to-gray-800 flex items-center justify-center">
+      <div className="min-h-screen bg-slate-50 dark:bg-slate-900 flex items-center justify-center">
         <div className="text-center">
-          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-indigo-600 mx-auto mb-4"></div>
-          <p className="text-gray-600 dark:text-gray-300">Loading game...</p>
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-slate-900 dark:border-white mx-auto mb-4"></div>
+          <p className="text-slate-600 dark:text-slate-300 font-medium">Loading game...</p>
         </div>
       </div>
     }>

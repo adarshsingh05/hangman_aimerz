@@ -6,10 +6,8 @@ import { createToken, getSetCookieHeader } from "../../../../../lib/auth";
 
 export async function POST(req) {
   try {
-    console.log("POST /login called");
 
     const { email, password } = await req.json();
-    console.log("Request body:", { email, password });
 
     if (!email || !password) {
       console.error("Missing email or password");
@@ -17,7 +15,6 @@ export async function POST(req) {
     }
 
     await dbConnect();
-    console.log("Connected to MongoDB");
 
     const user = await User.findOne({ email });
     if (!user) {
@@ -33,9 +30,7 @@ export async function POST(req) {
 
     const token = createToken(user._id.toString());
     const cookie = getSetCookieHeader(token);
-    console.log("Token created and cookie set");
-    console.log("Token value:", token);
-    console.log("User data:", { id: user._id, name: user.name, email: user.email });
+  
 
     return NextResponse.json(
       { 

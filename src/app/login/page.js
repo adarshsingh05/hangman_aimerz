@@ -28,8 +28,7 @@ export default function LoginPage() {
         // Store user data and token in localStorage for client-side access
         localStorage.setItem("user", JSON.stringify(data.user));
         localStorage.setItem("token", data.token);
-        console.log("Login successful, token stored:", data.token);
-        console.log("User stored:", data.user);
+       
         router.push("/dashboard");
       } else {
         setError(data.error || "Login failed");
@@ -46,29 +45,29 @@ export default function LoginPage() {
   };
 
   return (
-    <div className="min-h-screen bg-gray-50 dark:bg-gray-900 flex items-center justify-center p-4">
+    <div className="min-h-screen bg-slate-50 dark:bg-slate-900 flex items-center justify-center p-6">
       <div className="max-w-md w-full">
         {/* Header */}
-        <div className="text-center mb-8">
-          <h1 className="text-2xl font-semibold text-gray-900 dark:text-white mb-2">Hangman</h1>
-          <p className="text-gray-600 dark:text-gray-300">Welcome back! Sign in to continue</p>
+        <div className="text-center mb-10">
+          <h1 className="text-3xl font-bold text-slate-900 dark:text-white mb-3 tracking-tight">Hangman</h1>
+          <p className="text-slate-600 dark:text-slate-300 text-lg">Welcome back! Sign in to continue</p>
         </div>
 
         {/* Login Form */}
-        <div className="bg-white dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700 p-6">
-          <h2 className="text-xl font-semibold mb-6 text-center text-gray-900 dark:text-white">
+        <div className="bg-white dark:bg-slate-800 rounded-xl border border-slate-200 dark:border-slate-700 p-8 shadow-lg">
+          <h2 className="text-2xl font-bold mb-8 text-center text-slate-900 dark:text-white">
             Sign In
           </h2>
 
           {error && (
-            <div className="mb-4 p-3 bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded">
-              <p className="text-red-700 dark:text-red-300 text-sm">{error}</p>
+            <div className="mb-6 p-4 bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-lg">
+              <p className="text-red-700 dark:text-red-300 text-sm font-medium">{error}</p>
             </div>
           )}
 
-          <form onSubmit={handleSubmit} className="space-y-4">
+          <form onSubmit={handleSubmit} className="space-y-6">
             <div>
-              <label htmlFor="email" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+              <label htmlFor="email" className="block text-sm font-semibold text-slate-700 dark:text-slate-300 mb-3">
                 Email Address
               </label>
               <input
@@ -78,13 +77,13 @@ export default function LoginPage() {
                 value={formData.email}
                 onChange={handleChange}
                 required
-                className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500 bg-white dark:bg-gray-700 text-gray-900 dark:text-white"
+                className="w-full px-4 py-3 border border-slate-300 dark:border-slate-600 rounded-lg focus:border-slate-900 focus:outline-none focus:ring-2 focus:ring-slate-900/20 bg-white dark:bg-slate-700 text-slate-900 dark:text-white transition-colors"
                 placeholder="Enter your email"
               />
             </div>
 
             <div>
-              <label htmlFor="password" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+              <label htmlFor="password" className="block text-sm font-semibold text-slate-700 dark:text-slate-300 mb-3">
                 Password
               </label>
               <input
@@ -94,7 +93,7 @@ export default function LoginPage() {
                 value={formData.password}
                 onChange={handleChange}
                 required
-                className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500 bg-white dark:bg-gray-700 text-gray-900 dark:text-white"
+                className="w-full px-4 py-3 border border-slate-300 dark:border-slate-600 rounded-lg focus:border-slate-900 focus:outline-none focus:ring-2 focus:ring-slate-900/20 bg-white dark:bg-slate-700 text-slate-900 dark:text-white transition-colors"
                 placeholder="Enter your password"
               />
             </div>
@@ -102,32 +101,32 @@ export default function LoginPage() {
             <button
               type="submit"
               disabled={loading}
-              className="w-full py-2 px-4 bg-blue-600 hover:bg-blue-700 disabled:bg-blue-400 text-white font-medium rounded transition-colors"
+              className="w-full py-3 px-4 bg-slate-900 hover:bg-slate-800 disabled:bg-slate-400 text-white font-semibold rounded-lg transition-colors"
             >
               {loading ? "Signing In..." : "Sign In"}
             </button>
           </form>
 
           {/* Divider */}
-          <div className="my-4 flex items-center">
-            <div className="flex-1 border-t border-gray-300 dark:border-gray-600"></div>
-            <span className="px-3 text-gray-500 dark:text-gray-400 text-sm">or</span>
-            <div className="flex-1 border-t border-gray-300 dark:border-gray-600"></div>
+          <div className="my-6 flex items-center">
+            <div className="flex-1 border-t border-slate-300 dark:border-slate-600"></div>
+            <span className="px-4 text-slate-500 dark:text-slate-400 text-sm font-medium">or</span>
+            <div className="flex-1 border-t border-slate-300 dark:border-slate-600"></div>
           </div>
 
           {/* Guest Mode */}
           <Link
             href="/game?mode=guest"
-            className="w-full py-2 px-4 border border-gray-300 dark:border-gray-600 hover:bg-gray-50 dark:hover:bg-gray-700 text-gray-700 dark:text-gray-300 font-medium rounded transition-colors text-center block"
+            className="w-full py-3 px-4 border border-slate-300 dark:border-slate-600 hover:bg-slate-50 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-300 font-semibold rounded-lg transition-colors text-center block"
           >
             Play as Guest
           </Link>
 
           {/* Sign Up Link */}
-          <div className="mt-4 text-center">
-            <p className="text-sm text-gray-600 dark:text-gray-400">
+          <div className="mt-6 text-center">
+            <p className="text-sm text-slate-600 dark:text-slate-400">
               Don&apos;t have an account?{" "}
-              <Link href="/signup" className="text-blue-600 hover:text-blue-700 font-medium">
+              <Link href="/signup" className="text-slate-900 dark:text-white hover:text-slate-700 dark:hover:text-slate-300 font-semibold transition-colors">
                 Sign up here
               </Link>
             </p>
@@ -135,10 +134,10 @@ export default function LoginPage() {
         </div>
 
         {/* Back to Home */}
-        <div className="text-center mt-4">
+        <div className="text-center mt-6">
           <Link
             href="/"
-            className="text-sm text-gray-600 dark:text-gray-400 hover:text-gray-800 dark:hover:text-white transition-colors"
+            className="text-sm text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white transition-colors font-medium"
           >
             Back to Home
           </Link>
