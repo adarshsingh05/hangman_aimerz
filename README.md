@@ -45,24 +45,24 @@ A modern, responsive Hangman word guessing game built with Next.js, featuring us
  Development
 
 1. Clone the repository
-bash
-git clone 
+
+git clone https://github.com/adarshsingh05/hangman_aimerz
 cd HangMan
 
 
 2. Install dependencies
-bash
+
 npm install
 
 
 3. Set up environment variables
-bash
+
 cp .env.example .env.local
 
 Add your MongoDB connection string and JWT secret.
 
 4. Run the development server
-bash
+
 npm run dev
 
 
@@ -71,12 +71,12 @@ npm run dev
  Production
 
 1. Build the application
-bash
+
 npm run build
 
 
 2. Start the production server
-bash
+
 npm start
 
 
@@ -85,17 +85,17 @@ npm start
 The application is containerized using Docker for consistent deployment.
 
 1. Build Docker image
-bash
+
 docker build t hangmanapp .
 
 
 2. Run container
-bash
+
 docker run p 3000:3000 hangmanapp
 
 
 3. Using Docker Compose
-bash
+
 dockercompose up d
 
 
