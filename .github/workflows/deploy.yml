@@ -1,21 +1,20 @@
 name: Deploy to EC2
 
-# When the workflow will run
 on:
   push:
     branches:
-      - main          # runs whenever you push to main
+      - main        # trigger only on pushes to main
 
 jobs:
   deploy:
-    runs-on: ubuntu-latest   # GitHub runner machine
+    runs-on: ubuntu-latest
 
     steps:
-      # Step 1 – Get your repo code onto the runner
+      # 1 – Bring down the code for context (mainly to satisfy the action)
       - name: Checkout code
         uses: actions/checkout@v3
 
-      # Step 2 – SSH into your EC2 and deploy
+      # 2 – SSH into EC2 and do the work
       - name: Deploy over SSH
         uses: appleboy/ssh-action@v0.1.7
         with:
@@ -23,19 +22,31 @@ jobs:
           username: ${{ secrets.EC2_USER }}
           key: ${{ secrets.EC2_SSH_KEY }}
           script: |
-            # Go to app folder (or create it if first time)
-            cd ~/hangman_aimerz || mkdir ~/hangman_aimerz && cd ~/hangman_aimerz
+            set -e
 
-            # Pull new code (clone if first time)
+            # ensure folder exists
+            mkdir -p ~/hangman_aimerz
+            cd ~/hangman_aimerz
+
+            # clone once, afterwards just pull
             if [ -d .git ]; then
-              git pull
+              git reset --hard
+              git pull origin main
             else
-              git clone https://github.com/adarshsingh05/hangman_aimerz.
+              git clone https://github.com/adarshsingh05/hangman_aimerz.git .
             fi
 
-            # Stop & remove old container if it exists
+            # stop & remove previous container/image (ignore if missing)
             docker stop nextjs-app-container || true
-            docker rm nextjs-app-container || true
+            docker rm   nextjs-app-container || true
+            docker rmi  nextjs-app           || true
 
-            docker build -t nextjs-app .
-            docker run -d --restart unless-stopped -p 3000:3000 --name nextjs-app-container nextjs-app
+            # fresh build (no cache guarantees new UI shows)
+            docker build --no-cache -t nextjs-app .
+
+            # run in background & auto-restart on reboot
+            docker run -d \
+              --restart unless-stopped \
+              -p 3000:3000 \
+              --name nextjs-app-container \
+              nextjs-app
