@@ -99,14 +99,38 @@ function GameContent() {
       
       if (res.ok && json.word) {
         const w = json.word.toLowerCase();
+        
+        // Validate word format
+        if (typeof w !== 'string' || w.length < 3 || w.length > 20) {
+          console.error("Invalid word format received:", w);
+          alert("Invalid word received. Please try again.");
+          return;
+        }
+        
+        // Check for non-alphabetic characters
+        if (!/^[a-z]+$/.test(w)) {
+          console.error("Word contains invalid characters:", w);
+          alert("Invalid word format. Please try again.");
+          return;
+        }
+        
         setWord(w);
         setGuessed(new Set());
         setWrong(0);
         setStatus("playing");
         setInput("");
+        console.log("New game started with word length:", w.length);
       } else {
         console.error("Failed to get random word:", json.error);
-        alert("Failed to load a word. Please try again.");
+        
+        // Handle different error types
+        if (res.status === 429) {
+          alert("Too many requests. Please wait a moment and try again.");
+        } else if (res.status === 503) {
+          alert("Game service temporarily unavailable. Please try again later.");
+        } else {
+          alert(`Failed to load a word: ${json.error || "Unknown error"}`);
+        }
       }
     } catch (error) {
       console.error("Error fetching random word:", error);
@@ -196,21 +220,60 @@ function GameContent() {
 
   function handleGuess(e) {
     e.preventDefault();
-    if (!input || status !== "playing") return;
+    
+    // Validate game state
+    if (status !== "playing") {
+      console.warn("Attempted to guess when game is not in playing state:", status);
+      return;
+    }
+    
+    if (!input || input.trim() === "") {
+      console.warn("Empty input provided");
+      return;
+    }
+    
+    // Validate input format
     const letter = input[0].toLowerCase();
+    if (!/^[a-z]$/.test(letter)) {
+      console.warn("Invalid character provided:", input[0]);
+      alert("Please enter a valid letter (a-z)");
+      setInput("");
+      return;
+    }
+    
+    // Check if letter was already guessed
+    if (guessed.has(letter)) {
+      console.warn("Letter already guessed:", letter);
+      alert("You've already guessed this letter!");
+      setInput("");
+      return;
+    }
+    
     setInput("");
-    if (guessed.has(letter)) return;
+    
+    // Add letter to guessed set
     const newGuessed = new Set(guessed);
     newGuessed.add(letter);
     setGuessed(newGuessed);
+    
+    console.log(`Guessed letter: ${letter}, Word contains: ${word.includes(letter)}`);
+    
     if (!word.includes(letter)) {
       const w = wrong + 1;
       setWrong(w);
-      if (w >= maxWrong) setStatus("lost");
+      console.log(`Wrong guess! Wrong count: ${w}/${maxWrong}`);
+      
+      if (w >= maxWrong) {
+        setStatus("lost");
+        console.log("Game lost!");
+      }
     } else {
-      // check win
+      // Check if all letters are revealed (win condition)
       const allRevealed = word.split("").every((ch) => newGuessed.has(ch));
-      if (allRevealed) setStatus("won");
+      if (allRevealed) {
+        setStatus("won");
+        console.log("Game won!");
+      }
     }
   }
 
@@ -230,25 +293,54 @@ function GameContent() {
       const base = 10;
       const score = base + (win ? Math.max(0, maxWrong - wrong) * 2 : 0);
       
+      // Validate score before submission
+      if (score < 0 || score > 10000) {
+        console.error("Invalid score calculated:", score);
+        alert("Invalid score. Please try again.");
+        return;
+      }
+      
       const token = localStorage.getItem("token");
+      if (!token) {
+        console.error("No authentication token found");
+        alert("Authentication required to submit score. Please log in again.");
+        return;
+      }
+
       const response = await fetch("/api/score/submit", {
         method: "POST",
         headers: { 
           "Content-Type": "application/json",
-          ...(token ? { "Authorization": `Bearer ${token}` } : {})
+          "Authorization": `Bearer ${token}`
         },
         body: JSON.stringify({ score, win }),
         credentials: "include"
       });
 
       if (response.ok) {
+        const data = await response.json();
+        console.log("Score submitted successfully:", data);
         alert("Score submitted successfully!");
       } else {
-        alert("Failed to submit score. Please try again.");
+        const errorData = await response.json();
+        console.error("Score submission failed:", errorData);
+        
+        // Handle different error types
+        if (response.status === 401) {
+          alert("Session expired. Please log in again.");
+          // Clear localStorage and redirect to login
+          localStorage.removeItem("user");
+          localStorage.removeItem("token");
+          window.location.href = "/login";
+        } else if (response.status === 429) {
+          alert("Too many requests. Please wait a moment and try again.");
+        } else {
+          alert(`Failed to submit score: ${errorData.error || "Unknown error"}`);
+        }
       }
     } catch (error) {
       console.error("Score submission failed:", error);
-      alert("Failed to submit score. Please try again.");
+      alert("Network error. Please check your connection and try again.");
     }
   }
 

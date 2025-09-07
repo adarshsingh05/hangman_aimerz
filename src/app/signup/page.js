@@ -1,28 +1,33 @@
 "use client";
-import { useState } from "react";
+import { useState, useRef, useEffect } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
+import { createFormValidator, VALIDATION_RULES, showGlobalError, clearGlobalError } from "../../../lib/frontendValidation";
 
 export default function SignupPage() {
   const [formData, setFormData] = useState({ name: "", email: "", password: "", confirmPassword: "" });
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
+  const [fieldErrors, setFieldErrors] = useState({});
   const router = useRouter();
+  const formRef = useRef(null);
+  const validatorRef = useRef(null);
+
+  // Initialize form validator
+  useEffect(() => {
+    if (formRef.current) {
+      validatorRef.current = createFormValidator(formRef.current, VALIDATION_RULES.SIGNUP);
+    }
+  }, []);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     setLoading(true);
     setError("");
+    clearGlobalError();
 
-    // Validation
-    if (formData.password !== formData.confirmPassword) {
-      setError("Passwords do not match");
-      setLoading(false);
-      return;
-    }
-
-    if (formData.password.length < 6) {
-      setError("Password must be at least 6 characters long");
+    // Validate form
+    if (validatorRef.current && !validatorRef.current.validateForm()) {
       setLoading(false);
       return;
     }
@@ -47,17 +52,37 @@ export default function SignupPage() {
         localStorage.setItem("token", data.token);
         router.push("/dashboard");
       } else {
-        setError(data.error || "Signup failed");
+        // Handle different types of errors
+        if (data.details && typeof data.details === 'object') {
+          // Field-specific errors
+          setFieldErrors(data.details);
+        } else {
+          // Global error
+          setError(data.error || "Signup failed");
+          showGlobalError(data.error || "Signup failed");
+        }
       }
     } catch (err) {
-      setError("Network error. Please try again.");
+      const errorMessage = "Network error. Please check your connection and try again.";
+      setError(errorMessage);
+      showGlobalError(errorMessage);
     } finally {
       setLoading(false);
     }
   };
 
   const handleChange = (e) => {
-    setFormData({ ...formData, [e.target.name]: e.target.value });
+    const { name, value } = e.target;
+    setFormData({ ...formData, [name]: value });
+    
+    // Clear field error when user starts typing
+    if (fieldErrors[name]) {
+      setFieldErrors(prev => {
+        const newErrors = { ...prev };
+        delete newErrors[name];
+        return newErrors;
+      });
+    }
   };
 
   return (
@@ -75,13 +100,15 @@ export default function SignupPage() {
             Create Account
           </h2>
 
+          {/* Error Display */}
+          <div id="error-container"></div>
           {error && (
             <div className="mb-6 p-4 bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-lg">
               <p className="text-red-700 dark:text-red-300 text-sm font-medium">{error}</p>
             </div>
           )}
 
-          <form onSubmit={handleSubmit} className="space-y-6">
+          <form ref={formRef} onSubmit={handleSubmit} className="space-y-6">
             <div>
               <label htmlFor="name" className="block text-sm font-semibold text-slate-700 dark:text-slate-300 mb-3">
                 Full Name
@@ -93,9 +120,16 @@ export default function SignupPage() {
                 value={formData.name}
                 onChange={handleChange}
                 required
-                className="w-full px-4 py-3 border border-slate-300 dark:border-slate-600 rounded-lg focus:border-slate-900 focus:outline-none focus:ring-2 focus:ring-slate-900/20 bg-white dark:bg-slate-700 text-slate-900 dark:text-white transition-colors"
+                className={`w-full px-4 py-3 border rounded-lg focus:outline-none focus:ring-2 bg-white dark:bg-slate-700 text-slate-900 dark:text-white transition-colors ${
+                  fieldErrors.name 
+                    ? 'border-red-500 focus:border-red-500 focus:ring-red-500' 
+                    : 'border-slate-300 dark:border-slate-600 focus:border-slate-900 focus:ring-slate-900/20'
+                }`}
                 placeholder="Enter your full name"
               />
+              {fieldErrors.name && (
+                <p className="text-red-600 dark:text-red-400 text-sm mt-1">{fieldErrors.name}</p>
+              )}
             </div>
 
             <div>
@@ -109,9 +143,16 @@ export default function SignupPage() {
                 value={formData.email}
                 onChange={handleChange}
                 required
-                className="w-full px-4 py-3 border border-slate-300 dark:border-slate-600 rounded-lg focus:border-slate-900 focus:outline-none focus:ring-2 focus:ring-slate-900/20 bg-white dark:bg-slate-700 text-slate-900 dark:text-white transition-colors"
+                className={`w-full px-4 py-3 border rounded-lg focus:outline-none focus:ring-2 bg-white dark:bg-slate-700 text-slate-900 dark:text-white transition-colors ${
+                  fieldErrors.email 
+                    ? 'border-red-500 focus:border-red-500 focus:ring-red-500' 
+                    : 'border-slate-300 dark:border-slate-600 focus:border-slate-900 focus:ring-slate-900/20'
+                }`}
                 placeholder="Enter your email"
               />
+              {fieldErrors.email && (
+                <p className="text-red-600 dark:text-red-400 text-sm mt-1">{fieldErrors.email}</p>
+              )}
             </div>
 
             <div>
@@ -125,9 +166,16 @@ export default function SignupPage() {
                 value={formData.password}
                 onChange={handleChange}
                 required
-                className="w-full px-4 py-3 border border-slate-300 dark:border-slate-600 rounded-lg focus:border-slate-900 focus:outline-none focus:ring-2 focus:ring-slate-900/20 bg-white dark:bg-slate-700 text-slate-900 dark:text-white transition-colors"
+                className={`w-full px-4 py-3 border rounded-lg focus:outline-none focus:ring-2 bg-white dark:bg-slate-700 text-slate-900 dark:text-white transition-colors ${
+                  fieldErrors.password 
+                    ? 'border-red-500 focus:border-red-500 focus:ring-red-500' 
+                    : 'border-slate-300 dark:border-slate-600 focus:border-slate-900 focus:ring-slate-900/20'
+                }`}
                 placeholder="Create a password (min 6 characters)"
               />
+              {fieldErrors.password && (
+                <p className="text-red-600 dark:text-red-400 text-sm mt-1">{fieldErrors.password}</p>
+              )}
             </div>
 
             <div>
@@ -141,9 +189,16 @@ export default function SignupPage() {
                 value={formData.confirmPassword}
                 onChange={handleChange}
                 required
-                className="w-full px-4 py-3 border border-slate-300 dark:border-slate-600 rounded-lg focus:border-slate-900 focus:outline-none focus:ring-2 focus:ring-slate-900/20 bg-white dark:bg-slate-700 text-slate-900 dark:text-white transition-colors"
+                className={`w-full px-4 py-3 border rounded-lg focus:outline-none focus:ring-2 bg-white dark:bg-slate-700 text-slate-900 dark:text-white transition-colors ${
+                  fieldErrors.confirmPassword 
+                    ? 'border-red-500 focus:border-red-500 focus:ring-red-500' 
+                    : 'border-slate-300 dark:border-slate-600 focus:border-slate-900 focus:ring-slate-900/20'
+                }`}
                 placeholder="Confirm your password"
               />
+              {fieldErrors.confirmPassword && (
+                <p className="text-red-600 dark:text-red-400 text-sm mt-1">{fieldErrors.confirmPassword}</p>
+              )}
             </div>
 
             <button

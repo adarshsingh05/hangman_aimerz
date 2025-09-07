@@ -72,30 +72,34 @@ export default function Home() {
   };
 
   return (
-    <div className="min-h-screen bg-slate-50 dark:bg-slate-900">
+    <div className="min-h-screen bg-white dark:bg-black">
       {/* Navigation Bar */}
-      <nav className="bg-white/80 dark:bg-slate-800/80 backdrop-blur-sm border-b border-slate-200 dark:border-slate-700 sticky top-0 z-50">
-        <div className="max-w-7xl mx-auto px-6 py-4">
+      <nav className="bg-white dark:bg-black border-b border-gray-200 dark:border-gray-800 sticky top-0 z-50">
+        <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
           <div className="flex justify-between items-center">
             <div className="flex items-center">
-              <span className="text-xl font-bold text-slate-900 dark:text-white tracking-tight">Hangman</span>
+              <span className="text-xl font-semibold text-black dark:text-white tracking-tight">
+                HANGMAN
+              </span>
             </div>
             
             <div className="flex items-center space-x-3">
               {loading ? (
-                <div className="animate-pulse bg-slate-200 dark:bg-slate-700 h-9 w-24 rounded-lg"></div>
+                <div className="animate-pulse bg-gray-200 dark:bg-gray-800 h-8 w-20"></div>
               ) : user ? (
                 <div className="flex items-center space-x-3">
-                  <span className="text-sm text-slate-600 dark:text-slate-300 font-medium">Welcome, {user.name}</span>
+                  <span className="hidden sm:inline text-sm text-gray-600 dark:text-gray-400 font-medium">
+                    {user.name}
+                  </span>
                   <Link
                     href="/dashboard"
-                    className="px-4 py-2 bg-slate-900 hover:bg-slate-800 text-white text-sm font-medium rounded-lg transition-colors"
+                    className="btn-primary text-sm px-4 py-2"
                   >
                     Dashboard
                   </Link>
                   <button
                     onClick={handleLogout}
-                    className="px-4 py-2 border border-slate-300 dark:border-slate-600 hover:bg-slate-50 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-300 text-sm font-medium rounded-lg transition-colors"
+                    className="btn-secondary text-sm px-4 py-2"
                   >
                     Logout
                   </button>
@@ -104,13 +108,13 @@ export default function Home() {
                 <div className="flex items-center space-x-3">
                   <Link
                     href="/login"
-                    className="px-4 py-2 bg-slate-900 hover:bg-slate-800 text-white text-sm font-medium rounded-lg transition-colors"
+                    className="btn-primary text-sm px-4 py-2"
                   >
                     Login
                   </Link>
                   <Link
                     href="/signup"
-                    className="px-4 py-2 border border-slate-300 dark:border-slate-600 hover:bg-slate-50 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-300 text-sm font-medium rounded-lg transition-colors"
+                    className="btn-secondary text-sm px-4 py-2"
                   >
                     Sign Up
                   </Link>
@@ -121,53 +125,69 @@ export default function Home() {
         </div>
       </nav>
 
-      <div className="max-w-7xl mx-auto px-6 py-16">
-        <div className="text-center mb-16">
-          <h1 className="text-5xl font-bold text-slate-900 dark:text-white mb-6 tracking-tight">
-            Hangman
+      <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-16 sm:py-24">
+        <div className="text-center mb-16 sm:mb-24">
+          <h1 className="text-5xl sm:text-6xl lg:text-7xl font-light text-black dark:text-white mb-6 sm:mb-8 tracking-tight">
+            HANGMAN
           </h1>
-          <p className="text-xl text-slate-600 dark:text-slate-300 mb-8 max-w-2xl mx-auto leading-relaxed">
-            Challenge your vocabulary skills and save the stick figure from the gallows
+          <p className="text-lg sm:text-xl text-gray-600 dark:text-gray-400 mb-8 sm:mb-12 max-w-2xl mx-auto leading-relaxed font-light">
+            Challenge your vocabulary skills with the classic word guessing game
           </p>
+          <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
+            <Link
+              href="/game?mode=guest"
+              className="btn-primary text-base px-8 py-4"
+            >
+              Play as Guest
+            </Link>
+            {!user && (
+              <Link
+                href="/signup"
+                className="btn-secondary text-base px-8 py-4"
+              >
+                Create Account
+              </Link>
+            )}
+          </div>
         </div>
 
-        <div className="max-w-5xl mx-auto grid md:grid-cols-2 gap-8 mb-16">
-          {/* Game Preview */}
-          <div className="bg-white dark:bg-slate-800 rounded-xl border border-slate-200 dark:border-slate-700 p-8 shadow-sm">
-            <h2 className="text-2xl font-bold mb-6 text-slate-900 dark:text-white">How to Play</h2>
-            <div className="space-y-6 text-slate-600 dark:text-slate-300">
+        <div className="max-w-6xl mx-auto grid lg:grid-cols-2 gap-8 mb-16 sm:mb-24">
+          {/* How to Play */}
+          <div className="card-elevated p-8">
+            <h2 className="text-2xl font-light text-black dark:text-white mb-8">How to Play</h2>
+            <div className="space-y-6 text-gray-600 dark:text-gray-400">
               <div className="flex items-start space-x-4">
-                <div className="w-3 h-3 bg-blue-500 rounded-full mt-1.5 flex-shrink-0"></div>
+                <div className="w-1 h-1 bg-black dark:bg-white rounded-full mt-3 flex-shrink-0"></div>
                 <div>
-                  <h3 className="font-semibold text-base text-slate-900 dark:text-white mb-1">Guess the Word</h3>
+                  <h3 className="font-medium text-black dark:text-white mb-2">Guess the Word</h3>
                   <p className="text-sm leading-relaxed">Guess letters one by one to reveal the hidden word</p>
                 </div>
               </div>
               <div className="flex items-start space-x-4">
-                <div className="w-3 h-3 bg-orange-500 rounded-full mt-1.5 flex-shrink-0"></div>
+                <div className="w-1 h-1 bg-black dark:bg-white rounded-full mt-3 flex-shrink-0"></div>
                 <div>
-                  <h3 className="font-semibold text-base text-slate-900 dark:text-white mb-1">Limited Attempts</h3>
+                  <h3 className="font-medium text-black dark:text-white mb-2">Limited Attempts</h3>
                   <p className="text-sm leading-relaxed">You have 6 wrong guesses before the game ends</p>
                 </div>
               </div>
               <div className="flex items-start space-x-4">
-                <div className="w-3 h-3 bg-green-500 rounded-full mt-1.5 flex-shrink-0"></div>
+                <div className="w-1 h-1 bg-black dark:bg-white rounded-full mt-3 flex-shrink-0"></div>
                 <div>
-                  <h3 className="font-semibold text-base text-slate-900 dark:text-white mb-1">Score Points</h3>
+                  <h3 className="font-medium text-black dark:text-white mb-2">Score Points</h3>
                   <p className="text-sm leading-relaxed">Win games to earn points and climb the leaderboard</p>
                 </div>
               </div>
             </div>
           </div>
 
-          {/* Visual Hangman Preview */}
-          <div className="bg-white dark:bg-slate-800 rounded-xl border border-slate-200 dark:border-slate-700 p-8 flex items-center justify-center shadow-sm">
+          {/* Game Preview */}
+          <div className="card-elevated p-8 flex items-center justify-center">
             <div className="text-center">
-              <h2 className="text-2xl font-bold mb-6 text-slate-900 dark:text-white">Game Preview</h2>
-              <div className="w-32 h-40 mx-auto mb-6 bg-slate-100 dark:bg-slate-700 rounded-lg border border-slate-200 dark:border-slate-600 flex items-center justify-center">
-                <span className="text-3xl text-slate-400 font-mono tracking-widest">_ _ _ _ _</span>
+              <h2 className="text-2xl font-light text-black dark:text-white mb-8">Game Preview</h2>
+              <div className="w-32 h-40 mx-auto mb-6 bg-gray-50 dark:bg-gray-900 border border-gray-200 dark:border-gray-800 flex items-center justify-center">
+                <span className="text-3xl text-gray-400 font-mono tracking-widest">_ _ _ _ _</span>
               </div>
-              <p className="text-sm text-slate-600 dark:text-slate-300 leading-relaxed">
+              <p className="text-sm text-gray-600 dark:text-gray-400 leading-relaxed">
                 Watch the hangman drawing progress as you make wrong guesses
               </p>
             </div>
@@ -175,12 +195,12 @@ export default function Home() {
         </div>
 
         {/* Action Buttons */}
-        <div className="text-center space-y-8">
+        <div className="text-center space-y-8 mb-16 sm:mb-24">
           <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
             {user ? (
               <Link
                 href="/game"
-                className="bg-slate-900 hover:bg-slate-800 text-white font-semibold py-4 px-8 rounded-lg text-lg transition-colors shadow-lg hover:shadow-xl"
+                className="btn-primary text-base px-8 py-4"
               >
                 Start Playing
               </Link>
@@ -188,13 +208,13 @@ export default function Home() {
               <>
                 <Link
                   href="/game?mode=guest"
-                  className="bg-slate-900 hover:bg-slate-800 text-white font-semibold py-4 px-8 rounded-lg text-lg transition-colors shadow-lg hover:shadow-xl"
+                  className="btn-primary text-base px-8 py-4"
                 >
                   Play as Guest
                 </Link>
                 <Link
                   href="/signup"
-                  className="bg-blue-600 hover:bg-blue-700 text-white font-semibold py-4 px-8 rounded-lg text-lg transition-colors shadow-lg hover:shadow-xl"
+                  className="btn-secondary text-base px-8 py-4"
                 >
                   Sign Up to Save Progress
                 </Link>
@@ -202,14 +222,14 @@ export default function Home() {
             )}
             <Link
               href="/leaderboard"
-              className="border border-slate-300 dark:border-slate-600 hover:bg-slate-50 dark:hover:bg-slate-800 text-slate-700 dark:text-slate-300 font-semibold py-4 px-8 rounded-lg text-lg transition-colors"
+              className="btn-secondary text-base px-8 py-4"
             >
               View Leaderboard
             </Link>
           </div>
           
-          <div className="text-base text-slate-500 dark:text-slate-400 max-w-2xl mx-auto">
-            <p className="leading-relaxed">
+          <div className="text-sm text-gray-500 dark:text-gray-500 max-w-2xl mx-auto">
+            <p className="leading-relaxed font-light">
               {user 
                 ? "Challenge yourself with random words and compete with other players" 
                 : "Play as a guest or sign up to save your progress and compete on the leaderboard"
@@ -219,27 +239,33 @@ export default function Home() {
         </div>
 
         {/* Features */}
-        <div className="mt-20 grid md:grid-cols-3 gap-8">
-          <div className="text-center p-8 bg-white dark:bg-slate-800 rounded-xl border border-slate-200 dark:border-slate-700 shadow-sm hover:shadow-md transition-shadow">
-            <div className="w-16 h-16 bg-blue-100 dark:bg-blue-900/20 rounded-xl flex items-center justify-center mx-auto mb-6">
-              <span className="text-blue-600 dark:text-blue-400 font-bold text-2xl">R</span>
+        <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-8">
+          <div className="card-elevated text-center p-8">
+            <div className="w-16 h-16 bg-black dark:bg-white flex items-center justify-center mx-auto mb-6">
+              <svg className="w-8 h-8 text-white dark:text-black" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M7 4V2a1 1 0 011-1h8a1 1 0 011 1v2m-9 0h10m-10 0a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V6a2 2 0 00-2-2M9 12h6m-6 4h6" />
+              </svg>
             </div>
-            <h3 className="font-bold text-lg mb-3 text-slate-900 dark:text-white">Random Words</h3>
-            <p className="text-sm text-slate-600 dark:text-slate-300 leading-relaxed">Every game features a different word from our extensive database</p>
+            <h3 className="font-medium text-lg mb-3 text-black dark:text-white">Random Words</h3>
+            <p className="text-sm text-gray-600 dark:text-gray-400 leading-relaxed font-light">Every game features a different word from our extensive database</p>
           </div>
-          <div className="text-center p-8 bg-white dark:bg-slate-800 rounded-xl border border-slate-200 dark:border-slate-700 shadow-sm hover:shadow-md transition-shadow">
-            <div className="w-16 h-16 bg-green-100 dark:bg-green-900/20 rounded-xl flex items-center justify-center mx-auto mb-6">
-              <span className="text-green-600 dark:text-green-400 font-bold text-2xl">P</span>
+          <div className="card-elevated text-center p-8">
+            <div className="w-16 h-16 bg-black dark:bg-white flex items-center justify-center mx-auto mb-6">
+              <svg className="w-8 h-8 text-white dark:text-black" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
+              </svg>
             </div>
-            <h3 className="font-bold text-lg mb-3 text-slate-900 dark:text-white">Track Progress</h3>
-            <p className="text-sm text-slate-600 dark:text-slate-300 leading-relaxed">Monitor your wins, losses, and total score over time</p>
+            <h3 className="font-medium text-lg mb-3 text-black dark:text-white">Track Progress</h3>
+            <p className="text-sm text-gray-600 dark:text-gray-400 leading-relaxed font-light">Monitor your wins, losses, and total score over time</p>
           </div>
-          <div className="text-center p-8 bg-white dark:bg-slate-800 rounded-xl border border-slate-200 dark:border-slate-700 shadow-sm hover:shadow-md transition-shadow">
-            <div className="w-16 h-16 bg-orange-100 dark:bg-orange-900/20 rounded-xl flex items-center justify-center mx-auto mb-6">
-              <span className="text-orange-600 dark:text-orange-400 font-bold text-2xl">C</span>
+          <div className="card-elevated text-center p-8 sm:col-span-2 lg:col-span-1">
+            <div className="w-16 h-16 bg-black dark:bg-white flex items-center justify-center mx-auto mb-6">
+              <svg className="w-8 h-8 text-white dark:text-black" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M9 12l2 2 4-4M7.835 4.697a3.42 3.42 0 001.946-.806 3.42 3.42 0 014.438 0 3.42 3.42 0 001.946.806 3.42 3.42 0 013.138 3.138 3.42 3.42 0 00.806 1.946 3.42 3.42 0 010 4.438 3.42 3.42 0 00-.806 1.946 3.42 3.42 0 01-3.138 3.138 3.42 3.42 0 00-1.946.806 3.42 3.42 0 01-4.438 0 3.42 3.42 0 00-1.946-.806 3.42 3.42 0 01-3.138-3.138 3.42 3.42 0 00-.806-1.946 3.42 3.42 0 010-4.438 3.42 3.42 0 00.806-1.946 3.42 3.42 0 013.138-3.138z" />
+              </svg>
             </div>
-            <h3 className="font-bold text-lg mb-3 text-slate-900 dark:text-white">Compete</h3>
-            <p className="text-sm text-slate-600 dark:text-slate-300 leading-relaxed">See how you rank against other players worldwide</p>
+            <h3 className="font-medium text-lg mb-3 text-black dark:text-white">Compete</h3>
+            <p className="text-sm text-gray-600 dark:text-gray-400 leading-relaxed font-light">See how you rank against other players worldwide</p>
           </div>
         </div>
       </div>
