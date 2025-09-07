@@ -13,6 +13,14 @@ export default function Home() {
   const checkAuth = async () => {
     try {
       const token = localStorage.getItem("token");
+      
+      // If no token in localStorage, user should be logged out
+      if (!token) {
+        setUser(null);
+        setLoading(false);
+        return;
+      }
+      
       const response = await fetch("/api/auth/me", {
         credentials: "include",
         headers: token ? { "Authorization": `Bearer ${token}` } : {}
@@ -22,9 +30,18 @@ export default function Home() {
       if (data.user) {
         setUser(data.user);
         localStorage.setItem("user", JSON.stringify(data.user));
+      } else {
+        // If API returns no user, clear localStorage and set user to null
+        localStorage.removeItem("user");
+        localStorage.removeItem("token");
+        setUser(null);
       }
     } catch (error) {
       console.error("Auth check failed:", error);
+      // On error, clear localStorage and set user to null
+      localStorage.removeItem("user");
+      localStorage.removeItem("token");
+      setUser(null);
     } finally {
       setLoading(false);
     }

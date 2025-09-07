@@ -2,7 +2,8 @@ import { NextResponse } from "next/server";
 
 export async function POST() {
   // Clear the auth cookie by setting it to expire
-  const cookie = "token=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/; httpOnly; secure; sameSite=lax";
+  // Use the same cookie settings as the login to ensure proper clearing
+  const cookie = "token=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/; httpOnly; sameSite=lax";
   
   return NextResponse.json(
     { message: "Logged out successfully" },

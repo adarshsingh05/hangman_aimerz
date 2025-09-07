@@ -27,6 +27,14 @@ function GameContent() {
         }
 
         const token = localStorage.getItem("token");
+        
+        // If no token in localStorage, set as guest
+        if (!token) {
+          setIsGuest(true);
+          setLoading(false);
+          return;
+        }
+        
         const response = await fetch("/api/auth/me", {
           credentials: "include",
           headers: token ? { "Authorization": `Bearer ${token}` } : {}
@@ -37,10 +45,16 @@ function GameContent() {
           setUser(data.user);
           localStorage.setItem("user", JSON.stringify(data.user));
         } else {
+          // If API returns no user, clear localStorage and set as guest
+          localStorage.removeItem("user");
+          localStorage.removeItem("token");
           setIsGuest(true);
         }
       } catch (error) {
         console.error("Auth check failed:", error);
+        // On error, clear localStorage and set as guest
+        localStorage.removeItem("user");
+        localStorage.removeItem("token");
         setIsGuest(true);
       } finally {
         setLoading(false);
@@ -75,35 +89,6 @@ function GameContent() {
     resetGame();
   }, [searchParams]);
 
-  const checkAuth = async () => {
-    try {
-      const mode = searchParams.get("mode");
-      if (mode === "guest") {
-        setIsGuest(true);
-        setLoading(false);
-        return;
-      }
-
-      const token = localStorage.getItem("token");
-      const response = await fetch("/api/auth/me", {
-        credentials: "include",
-        headers: token ? { "Authorization": `Bearer ${token}` } : {}
-      });
-      const data = await response.json();
-      
-      if (data.user) {
-        setUser(data.user);
-        localStorage.setItem("user", JSON.stringify(data.user));
-      } else {
-        setIsGuest(true);
-      }
-    } catch (error) {
-      console.error("Auth check failed:", error);
-      setIsGuest(true);
-    } finally {
-      setLoading(false);
-    }
-  };
 
   async function resetGame() {
     try {

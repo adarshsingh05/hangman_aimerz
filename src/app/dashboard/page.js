@@ -14,6 +14,13 @@ export default function DashboardPage() {
     const checkAuth = async () => {
       try {
         const token = localStorage.getItem("token");
+        
+        // If no token in localStorage, redirect to login
+        if (!token) {
+          router.push("/login");
+          return;
+        }
+        
         const response = await fetch("/api/auth/me", {
           credentials: "include",
           headers: token ? { "Authorization": `Bearer ${token}` } : {}
@@ -25,11 +32,16 @@ export default function DashboardPage() {
           // Fetch user stats
           fetchUserStats();
         } else {
-          // Redirect to login if not authenticated
+          // If API returns no user, clear localStorage and redirect to login
+          localStorage.removeItem("user");
+          localStorage.removeItem("token");
           router.push("/login");
         }
       } catch (error) {
         console.error("Auth check failed:", error);
+        // On error, clear localStorage and redirect to login
+        localStorage.removeItem("user");
+        localStorage.removeItem("token");
         router.push("/login");
       } finally {
         setLoading(false);
