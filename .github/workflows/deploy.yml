@@ -37,6 +37,5 @@ jobs:
             docker stop nextjs-app-container || true
             docker rm nextjs-app-container || true
 
-            # Build a new image and run it
             docker build -t nextjs-app .
             docker run -d --restart unless-stopped -p 3000:3000 --name nextjs-app-container nextjs-app
