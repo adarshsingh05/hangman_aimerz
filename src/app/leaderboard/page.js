@@ -104,9 +104,9 @@ export default function Leaderboard() {
             </Link>
             <Link 
               href="/" 
-              className="btn-secondary text-base px-8 py-4"
+              className="btn-ghost text-sm"
             >
-              Back to Home
+              ← Back to Home
             </Link>
           </div>
         </div>

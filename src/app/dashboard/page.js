@@ -93,10 +93,10 @@ export default function DashboardPage() {
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-slate-50 dark:bg-slate-900 flex items-center justify-center">
+      <div className="min-h-screen bg-white dark:bg-black flex items-center justify-center">
         <div className="text-center">
-          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-slate-900 dark:border-white mx-auto mb-4"></div>
-          <p className="text-slate-600 dark:text-slate-300 font-medium">Loading dashboard...</p>
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-black dark:border-white mx-auto mb-4"></div>
+          <p className="text-gray-600 dark:text-gray-400 font-light">Loading dashboard...</p>
         </div>
       </div>
     );
@@ -109,160 +109,157 @@ export default function DashboardPage() {
   const winRate = userStats?.gamesPlayed > 0 ? ((userStats.wins / userStats.gamesPlayed) * 100).toFixed(1) : 0;
 
   return (
-    <div className="min-h-screen bg-slate-50 dark:bg-slate-900 p-6">
-      <div className="max-w-6xl mx-auto">
-        {/* Header */}
-        <div className="flex justify-between items-center mb-10">
-          <div>
-            <h1 className="text-4xl font-bold text-slate-900 dark:text-white mb-3 tracking-tight">
-              Welcome back, {user.name}
-            </h1>
-            <p className="text-slate-600 dark:text-slate-300 text-lg">Ready to play some Hangman?</p>
+    <div className="min-h-screen bg-white dark:bg-black">
+      {/* Navigation Bar */}
+      <nav className="bg-white dark:bg-black border-b border-gray-200 dark:border-gray-800 sticky top-0 z-50">
+        <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
+          <div className="flex justify-between items-center">
+            <div className="flex items-center">
+              <span className="text-xl font-semibold text-black dark:text-white tracking-tight">
+                HANGMAN
+              </span>
+            </div>
+            
+            <div className="flex items-center space-x-3">
+              <span className="hidden sm:inline text-sm text-gray-600 dark:text-gray-400 font-medium">
+                {user.name}
+              </span>
+              <button
+                onClick={handleLogout}
+                className="btn-secondary text-sm px-4 py-2"
+              >
+                Logout
+              </button>
+            </div>
           </div>
-          <button
-            onClick={handleLogout}
-            className="px-6 py-3 bg-red-600 hover:bg-red-700 text-white font-semibold rounded-lg transition-colors shadow-sm hover:shadow-md"
-          >
-            Logout
-          </button>
+        </div>
+      </nav>
+
+      <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-16 sm:py-24">
+        {/* Header */}
+        <div className="text-center mb-16 sm:mb-24">
+          <h1 className="text-4xl sm:text-5xl font-light text-black dark:text-white mb-6 tracking-tight">
+            Welcome back, {user.name}
+          </h1>
+          <p className="text-lg text-gray-600 dark:text-gray-400 font-light">Ready to play some Hangman?</p>
         </div>
 
         {/* Stats Cards */}
-        <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6 mb-10">
-          <div className="bg-white dark:bg-slate-800 rounded-xl border border-slate-200 dark:border-slate-700 p-6 shadow-sm hover:shadow-md transition-shadow">
-            <div className="flex items-center justify-between">
-              <div>
-                <p className="text-slate-600 dark:text-slate-400 text-sm font-semibold">Total Score</p>
-                <p className="text-3xl font-bold text-slate-900 dark:text-white">
-                  {userStats?.score?.toLocaleString() || 0}
-                </p>
-              </div>
-              <div className="w-12 h-12 bg-blue-100 dark:bg-blue-900/20 rounded-lg flex items-center justify-center">
-                <span className="text-blue-600 dark:text-blue-400 font-bold text-lg">S</span>
-              </div>
+        <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-8 mb-16 sm:mb-24">
+          <div className="card-elevated p-8 text-center">
+            <div className="w-16 h-16 bg-black dark:bg-white flex items-center justify-center mx-auto mb-6">
+              <span className="text-white dark:text-black font-medium text-lg">S</span>
             </div>
+            <h3 className="font-medium text-lg mb-3 text-black dark:text-white">Total Score</h3>
+            <p className="text-3xl font-light text-black dark:text-white">
+              {userStats?.score?.toLocaleString() || 0}
+            </p>
           </div>
 
-          <div className="bg-white dark:bg-slate-800 rounded-xl border border-slate-200 dark:border-slate-700 p-6 shadow-sm hover:shadow-md transition-shadow">
-            <div className="flex items-center justify-between">
-              <div>
-                <p className="text-slate-600 dark:text-slate-400 text-sm font-semibold">Games Played</p>
-                <p className="text-3xl font-bold text-slate-900 dark:text-white">
-                  {userStats?.gamesPlayed || 0}
-                </p>
-              </div>
-              <div className="w-12 h-12 bg-green-100 dark:bg-green-900/20 rounded-lg flex items-center justify-center">
-                <span className="text-green-600 dark:text-green-400 font-bold text-lg">G</span>
-              </div>
+          <div className="card-elevated p-8 text-center">
+            <div className="w-16 h-16 bg-black dark:bg-white flex items-center justify-center mx-auto mb-6">
+              <span className="text-white dark:text-black font-medium text-lg">G</span>
             </div>
+            <h3 className="font-medium text-lg mb-3 text-black dark:text-white">Games Played</h3>
+            <p className="text-3xl font-light text-black dark:text-white">
+              {userStats?.gamesPlayed || 0}
+            </p>
           </div>
 
-          <div className="bg-white dark:bg-slate-800 rounded-xl border border-slate-200 dark:border-slate-700 p-6 shadow-sm hover:shadow-md transition-shadow">
-            <div className="flex items-center justify-between">
-              <div>
-                <p className="text-slate-600 dark:text-slate-400 text-sm font-semibold">Wins</p>
-                <p className="text-3xl font-bold text-slate-900 dark:text-white">
-                  {userStats?.wins || 0}
-                </p>
-              </div>
-              <div className="w-12 h-12 bg-yellow-100 dark:bg-yellow-900/20 rounded-lg flex items-center justify-center">
-                <span className="text-yellow-600 dark:text-yellow-400 font-bold text-lg">W</span>
-              </div>
+          <div className="card-elevated p-8 text-center">
+            <div className="w-16 h-16 bg-black dark:bg-white flex items-center justify-center mx-auto mb-6">
+              <span className="text-white dark:text-black font-medium text-lg">W</span>
             </div>
+            <h3 className="font-medium text-lg mb-3 text-black dark:text-white">Wins</h3>
+            <p className="text-3xl font-light text-black dark:text-white">
+              {userStats?.wins || 0}
+            </p>
           </div>
 
-          <div className="bg-white dark:bg-slate-800 rounded-xl border border-slate-200 dark:border-slate-700 p-6 shadow-sm hover:shadow-md transition-shadow">
-            <div className="flex items-center justify-between">
-              <div>
-                <p className="text-slate-600 dark:text-slate-400 text-sm font-semibold">Win Rate</p>
-                <p className="text-3xl font-bold text-slate-900 dark:text-white">
-                  {winRate}%
-                </p>
-              </div>
-              <div className="w-12 h-12 bg-purple-100 dark:bg-purple-900/20 rounded-lg flex items-center justify-center">
-                <span className="text-purple-600 dark:text-purple-400 font-bold text-lg">%</span>
-              </div>
+          <div className="card-elevated p-8 text-center">
+            <div className="w-16 h-16 bg-black dark:bg-white flex items-center justify-center mx-auto mb-6">
+              <span className="text-white dark:text-black font-medium text-lg">%</span>
             </div>
+            <h3 className="font-medium text-lg mb-3 text-black dark:text-white">Win Rate</h3>
+            <p className="text-3xl font-light text-black dark:text-white">
+              {winRate}%
+            </p>
           </div>
         </div>
 
         {/* Action Cards */}
-        <div className="grid md:grid-cols-2 gap-8 mb-10">
+        <div className="grid md:grid-cols-2 gap-8 mb-16 sm:mb-24">
           {/* Play Game Card */}
-          <div className="bg-white dark:bg-slate-800 rounded-xl border border-slate-200 dark:border-slate-700 p-8 shadow-sm hover:shadow-md transition-shadow">
-            <div className="text-center">
-              <div className="w-16 h-16 bg-blue-100 dark:bg-blue-900/20 rounded-xl flex items-center justify-center mx-auto mb-6">
-                <span className="text-blue-600 dark:text-blue-400 font-bold text-2xl">P</span>
-              </div>
-              <h2 className="text-2xl font-bold text-slate-900 dark:text-white mb-4">Play Hangman</h2>
-              <p className="text-slate-600 dark:text-slate-300 mb-6 leading-relaxed">
-                Challenge yourself with new words and improve your score!
-              </p>
-              <Link
-                href="/game"
-                className="inline-block px-8 py-3 bg-slate-900 hover:bg-slate-800 text-white font-semibold rounded-lg transition-colors shadow-sm hover:shadow-md"
-              >
-                Start Playing
-              </Link>
+          <div className="card-elevated p-8 text-center">
+            <div className="w-16 h-16 bg-black dark:bg-white flex items-center justify-center mx-auto mb-6">
+              <span className="text-white dark:text-black font-medium text-2xl">P</span>
             </div>
+            <h2 className="text-2xl font-light text-black dark:text-white mb-4">Play Hangman</h2>
+            <p className="text-sm text-gray-600 dark:text-gray-400 mb-6 leading-relaxed font-light">
+              Challenge yourself with new words and improve your score!
+            </p>
+            <Link
+              href="/game"
+              className="btn-primary text-base px-8 py-4"
+            >
+              Start Playing
+            </Link>
           </div>
 
           {/* Leaderboard Card */}
-          <div className="bg-white dark:bg-slate-800 rounded-xl border border-slate-200 dark:border-slate-700 p-8 shadow-sm hover:shadow-md transition-shadow">
-            <div className="text-center">
-              <div className="w-16 h-16 bg-yellow-100 dark:bg-yellow-900/20 rounded-xl flex items-center justify-center mx-auto mb-6">
-                <span className="text-yellow-600 dark:text-yellow-400 font-bold text-2xl">L</span>
-              </div>
-              <h2 className="text-2xl font-bold text-slate-900 dark:text-white mb-4">Leaderboard</h2>
-              <p className="text-slate-600 dark:text-slate-300 mb-6 leading-relaxed">
-                See how you rank against other players worldwide!
-              </p>
-              <Link
-                href="/leaderboard"
-                className="inline-block px-8 py-3 bg-blue-600 hover:bg-blue-700 text-white font-semibold rounded-lg transition-colors shadow-sm hover:shadow-md"
-              >
-                View Rankings
-              </Link>
+          <div className="card-elevated p-8 text-center">
+            <div className="w-16 h-16 bg-black dark:bg-white flex items-center justify-center mx-auto mb-6">
+              <span className="text-white dark:text-black font-medium text-2xl">L</span>
             </div>
+            <h2 className="text-2xl font-light text-black dark:text-white mb-4">Leaderboard</h2>
+            <p className="text-sm text-gray-600 dark:text-gray-400 mb-6 leading-relaxed font-light">
+              See how you rank against other players worldwide!
+            </p>
+            <Link
+              href="/leaderboard"
+              className="btn-secondary text-base px-8 py-4"
+            >
+              View Rankings
+            </Link>
           </div>
         </div>
 
         {/* Recent Activity */}
-        <div className="bg-white dark:bg-slate-800 rounded-xl border border-slate-200 dark:border-slate-700 p-8 shadow-sm">
-          <h2 className="text-2xl font-bold text-slate-900 dark:text-white mb-8">Your Progress</h2>
+        <div className="card-elevated p-8">
+          <h2 className="text-2xl font-light text-black dark:text-white mb-8">Your Progress</h2>
           
           {userStats?.gamesPlayed === 0 ? (
             <div className="text-center py-12">
-              <div className="w-16 h-16 bg-slate-100 dark:bg-slate-700 rounded-xl flex items-center justify-center mx-auto mb-6">
-                <span className="text-slate-600 dark:text-slate-400 font-bold text-2xl">G</span>
+              <div className="w-16 h-16 bg-gray-50 dark:bg-gray-900 flex items-center justify-center mx-auto mb-6">
+                <span className="text-gray-400 dark:text-gray-600 font-medium text-2xl">G</span>
               </div>
-              <p className="text-slate-600 dark:text-slate-300 mb-6 text-lg">You haven&apos;t played any games yet!</p>
+              <p className="text-gray-600 dark:text-gray-400 mb-6 text-lg font-light">You haven&apos;t played any games yet!</p>
               <Link
                 href="/game"
-                className="inline-block px-8 py-3 bg-slate-900 hover:bg-slate-800 text-white font-semibold rounded-lg transition-colors shadow-sm hover:shadow-md"
+                className="btn-primary text-base px-8 py-4"
               >
                 Play Your First Game
               </Link>
             </div>
           ) : (
             <div className="grid md:grid-cols-3 gap-6">
-              <div className="text-center p-6 bg-slate-50 dark:bg-slate-700 rounded-lg border border-slate-200 dark:border-slate-600">
-                <div className="text-3xl font-bold text-green-600 dark:text-green-400 mb-2">
+              <div className="text-center p-6 bg-gray-50 dark:bg-gray-900 border border-gray-200 dark:border-gray-800">
+                <div className="text-3xl font-light text-black dark:text-white mb-2">
                   {userStats?.wins || 0}
                 </div>
-                <div className="text-sm text-slate-600 dark:text-slate-300 font-medium">Games Won</div>
+                <div className="text-sm text-gray-600 dark:text-gray-400 font-light">Games Won</div>
               </div>
-              <div className="text-center p-6 bg-slate-50 dark:bg-slate-700 rounded-lg border border-slate-200 dark:border-slate-600">
-                <div className="text-3xl font-bold text-red-600 dark:text-red-400 mb-2">
+              <div className="text-center p-6 bg-gray-50 dark:bg-gray-900 border border-gray-200 dark:border-gray-800">
+                <div className="text-3xl font-light text-black dark:text-white mb-2">
                   {userStats?.losses || 0}
                 </div>
-                <div className="text-sm text-slate-600 dark:text-slate-300 font-medium">Games Lost</div>
+                <div className="text-sm text-gray-600 dark:text-gray-400 font-light">Games Lost</div>
               </div>
-              <div className="text-center p-6 bg-slate-50 dark:bg-slate-700 rounded-lg border border-slate-200 dark:border-slate-600">
-                <div className="text-3xl font-bold text-blue-600 dark:text-blue-400 mb-2">
+              <div className="text-center p-6 bg-gray-50 dark:bg-gray-900 border border-gray-200 dark:border-gray-800">
+                <div className="text-3xl font-light text-black dark:text-white mb-2">
                   {winRate}%
                 </div>
-                <div className="text-sm text-slate-600 dark:text-slate-300 font-medium">Success Rate</div>
+                <div className="text-sm text-gray-600 dark:text-gray-400 font-light">Success Rate</div>
               </div>
             </div>
           )}
@@ -272,7 +269,7 @@ export default function DashboardPage() {
         <div className="text-center mt-10">
           <Link
             href="/"
-            className="inline-flex items-center px-6 py-3 bg-slate-600 hover:bg-slate-700 text-white font-semibold rounded-lg transition-colors shadow-sm hover:shadow-md"
+            className="btn-ghost text-sm"
           >
             ← Back to Home
           </Link>
