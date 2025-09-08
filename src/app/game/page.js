@@ -10,14 +10,14 @@ function GameContent() {
   const [input, setInput] = useState("");
   const [wrong, setWrong] = useState(0);
   const maxWrong = 6;
-  const [status, setStatus] = useState("playing"); // playing | won | lost
+  const [status, setStatus] = useState("playing"); // playing | won | lost three things only
   const [user, setUser] = useState(null);
   const [isGuest, setIsGuest] = useState(false);
   const [loading, setLoading] = useState(true);
   const searchParams = useSearchParams();
 
   useEffect(() => {
-    const checkAuth = async () => {
+    const checkingAuth = async () => {
       try {
         const mode = searchParams.get("mode");
         if (mode === "guest") {
@@ -51,7 +51,7 @@ function GameContent() {
           setIsGuest(true);
         }
       } catch (error) {
-        console.error("Auth check failed:", error);
+        console.error("Auth checking failed:", error);
         // On error, clear localStorage and set as guest
         localStorage.removeItem("user");
         localStorage.removeItem("token");
@@ -81,11 +81,11 @@ function GameContent() {
         }
       } catch (error) {
         console.error("Error fetching random word:", error);
-        alert("Network error. Please check your connection and try again.");
+        alert("Network error. Please checking your connection and try again.");
       }
     };
 
-    checkAuth();
+    checkingAuth();
     resetGame();
   }, [searchParams]);
 
@@ -107,7 +107,7 @@ function GameContent() {
           return;
         }
         
-        // Check for non-alphabetic characters
+        // checking for non-alphabetic characters
         if (!/^[a-z]+$/.test(w)) {
           console.error("Word contains invalid characters:", w);
           alert("Invalid word format. Please try again.");
@@ -134,7 +134,7 @@ function GameContent() {
       }
     } catch (error) {
       console.error("Error fetching random word:", error);
-      alert("Network error. Please check your connection and try again.");
+      alert("Network error. Please checking your connection and try again.");
     }
   }
 
@@ -241,7 +241,7 @@ function GameContent() {
       return;
     }
     
-    // Check if letter was already guessed
+    // checking if letter was already guessed
     if (guessed.has(letter)) {
       console.warn("Letter already guessed:", letter);
       alert("You've already guessed this letter!");
@@ -268,7 +268,7 @@ function GameContent() {
         console.log("Game lost!");
       }
     } else {
-      // Check if all letters are revealed (win condition)
+      // checking if all letters are revealed (win condition)
       const allRevealed = word.split("").every((ch) => newGuessed.has(ch));
       if (allRevealed) {
         setStatus("won");
@@ -340,59 +340,69 @@ function GameContent() {
       }
     } catch (error) {
       console.error("Score submission failed:", error);
-      alert("Network error. Please check your connection and try again.");
+      alert("Network error. Please checking your connection and try again.");
     }
   }
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-slate-50 dark:bg-slate-900 flex items-center justify-center">
+      <div className="min-h-screen bg-white dark:bg-black flex items-center justify-center">
         <div className="text-center">
-          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-slate-900 dark:border-white mx-auto mb-4"></div>
-          <p className="text-slate-600 dark:text-slate-300 font-medium">Loading game...</p>
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-black dark:border-white mx-auto mb-4"></div>
+          <p className="text-gray-600 dark:text-gray-400 font-light">Loading game...</p>
         </div>
       </div>
     );
   }
 
   return (
-    <div className="min-h-screen bg-slate-50 dark:bg-slate-900">
-      <div className="max-w-7xl mx-auto px-6 py-8">
-        {/* Header */}
-        <div className="mb-8">
-          <div className="flex items-center justify-between">
-            <div>
-              <h1 className="text-3xl font-bold text-slate-900 dark:text-white tracking-tight">Hangman</h1>
-              <p className="text-slate-600 dark:text-slate-300 mt-2">Guess the word before the hangman is complete</p>
+    <div className="min-h-screen bg-white dark:bg-black">
+      {/* Navigation Bar */}
+      <nav className="bg-white dark:bg-black border-b border-gray-200 dark:border-gray-800 sticky top-0 z-50">
+        <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
+          <div className="flex justify-between items-center">
+            <div className="flex items-center">
+              <span className="text-xl font-semibold text-black dark:text-white tracking-tight">
+                HANGMAN
+              </span>
             </div>
             
-            {/* User Status */}
-            <div className="flex items-center gap-3">
+            <div className="flex items-center space-x-3">
               {user ? (
-                <div className="bg-white dark:bg-slate-800 px-4 py-2 rounded-lg border border-slate-200 dark:border-slate-700 shadow-sm">
-                  <span className="text-sm font-semibold text-slate-700 dark:text-slate-300">{user.name}</span>
-                </div>
+                <span className="hidden sm:inline text-sm text-gray-600 dark:text-gray-400 font-medium">
+                  {user.name}
+                </span>
               ) : (
-                <div className="bg-white dark:bg-slate-800 px-4 py-2 rounded-lg border border-slate-200 dark:border-slate-700 shadow-sm">
-                  <span className="text-sm font-semibold text-slate-700 dark:text-slate-300">Guest</span>
-                </div>
+                <span className="hidden sm:inline text-sm text-gray-600 dark:text-gray-400 font-medium">
+                  Guest
+                </span>
               )}
             </div>
           </div>
         </div>
+      </nav>
+
+      <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-16 sm:py-24">
+        {/* Header */}
+        <div className="text-center mb-16 sm:mb-24">
+          <h1 className="text-4xl sm:text-5xl font-light text-black dark:text-white mb-6 tracking-tight">
+            HANGMAN
+          </h1>
+          <p className="text-lg text-gray-600 dark:text-gray-400 font-light">Guess the word before the hangman is complete</p>
+        </div>
 
         <div className="grid lg:grid-cols-3 gap-8">
           {/* Hangman Drawing */}
-          <div className="lg:col-span-2 bg-white dark:bg-slate-800 rounded-xl border border-slate-200 dark:border-slate-700 p-8 shadow-sm">
+          <div className="lg:col-span-2 card-elevated p-8">
             <div className="flex justify-center items-center h-80 mb-6">
               {renderHangman()}
             </div>
             <div className="text-center">
-              <div className="text-base font-semibold text-slate-700 dark:text-slate-300 mb-3">
+              <div className="text-base font-medium text-black dark:text-white mb-3">
                 Wrong Guesses: {wrong} / {maxWrong}
               </div>
               {wrong > 0 && (
-                <div className="text-sm text-slate-500 dark:text-slate-400">
+                <div className="text-sm text-gray-600 dark:text-gray-400">
                   Wrong letters: {Array.from(guessed).filter(letter => !word.includes(letter)).join(", ")}
                 </div>
               )}
@@ -400,12 +410,12 @@ function GameContent() {
           </div>
 
           {/* Game Controls */}
-          <div className="bg-white dark:bg-slate-800 rounded-xl border border-slate-200 dark:border-slate-700 p-8 shadow-sm">
+          <div className="card-elevated p-8">
             <div className="mb-8">
-              <div className="text-3xl tracking-widest font-mono text-center py-4 bg-slate-50 dark:bg-slate-700 rounded-lg border border-slate-200 dark:border-slate-600">
+              <div className="text-3xl tracking-widest font-mono text-center py-4 bg-gray-50 dark:bg-gray-900 border border-gray-200 dark:border-gray-800">
                 {masked()}
               </div>
-              <div className="text-center mt-3 text-sm text-slate-500 dark:text-slate-400 font-medium">
+              <div className="text-center mt-3 text-sm text-gray-600 dark:text-gray-400 font-light">
                 {word.length} letters
               </div>
             </div>
@@ -415,7 +425,7 @@ function GameContent() {
                 <form onSubmit={handleGuess} className="space-y-4">
                   <div className="flex gap-3">
                     <input
-                      className="flex-1 border border-slate-300 dark:border-slate-600 rounded-lg px-4 py-3 text-center text-xl font-semibold focus:border-slate-900 focus:outline-none focus:ring-2 focus:ring-slate-900/20 bg-white dark:bg-slate-700 text-slate-900 dark:text-white transition-colors"
+                      className="flex-1 input-field text-center text-xl font-medium"
                       value={input}
                       onChange={(e) => setInput(e.target.value.replace(/[^a-zA-Z]/g, ""))}
                       maxLength={1}
@@ -424,7 +434,7 @@ function GameContent() {
                     />
                     <button 
                       type="submit"
-                      className="px-6 py-3 bg-slate-900 hover:bg-slate-800 text-white font-semibold rounded-lg transition-colors shadow-sm hover:shadow-md"
+                      className="btn-primary px-6 py-3"
                     >
                       Guess
                     </button>
@@ -435,13 +445,13 @@ function GameContent() {
                   <button 
                     type="button" 
                     onClick={resetGame} 
-                    className="flex-1 px-4 py-3 text-sm font-semibold border border-slate-300 dark:border-slate-600 hover:bg-slate-50 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-300 rounded-lg transition-colors"
+                    className="btn-secondary flex-1 py-3"
                   >
                     New Word
                   </button>
                   <Link 
                     href="/leaderboard" 
-                    className="flex-1 px-4 py-3 text-sm font-semibold border border-slate-300 dark:border-slate-600 hover:bg-slate-50 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-300 rounded-lg transition-colors text-center"
+                    className="btn-secondary flex-1 py-3 text-center"
                   >
                     Leaderboard
                   </Link>
@@ -451,13 +461,13 @@ function GameContent() {
               <div className="space-y-6">
                 {status === "won" ? (
                   <div className="text-center">
-                    <div className="w-20 h-20 bg-green-50 dark:bg-green-900/20 rounded-xl flex items-center justify-center mx-auto mb-6">
-                      <span className="text-3xl font-bold text-green-600 dark:text-green-400">✓</span>
+                    <div className="w-20 h-20 bg-gray-50 dark:bg-gray-900 border border-gray-200 dark:border-gray-800 flex items-center justify-center mx-auto mb-6">
+                      <span className="text-3xl font-medium text-black dark:text-white">✓</span>
                     </div>
-                    <p className="text-xl font-bold text-green-600 dark:text-green-400 mb-3">You Won!</p>
-                    <p className="text-sm text-slate-600 dark:text-slate-300 mb-6">The word was: <span className="font-mono font-semibold text-slate-900 dark:text-white">{word}</span></p>
+                    <p className="text-xl font-medium text-black dark:text-white mb-3">You Won!</p>
+                    <p className="text-sm text-gray-600 dark:text-gray-400 mb-6 font-light">The word was: <span className="font-mono font-medium text-black dark:text-white">{word}</span></p>
                     <button 
-                      className="w-full px-6 py-3 bg-green-600 hover:bg-green-700 text-white font-semibold rounded-lg transition-colors shadow-sm hover:shadow-md" 
+                      className="btn-primary w-full py-4" 
                       onClick={() => submitScore(true)}
                     >
                       Submit Score
@@ -465,14 +475,14 @@ function GameContent() {
                   </div>
                 ) : (
                   <div className="text-center">
-                    <div className="w-20 h-20 bg-red-50 dark:bg-red-900/20 rounded-xl flex items-center justify-center mx-auto mb-6">
-                      <span className="text-3xl font-bold text-red-600 dark:text-red-400">✗</span>
+                    <div className="w-20 h-20 bg-gray-50 dark:bg-gray-900 border border-gray-200 dark:border-gray-800 flex items-center justify-center mx-auto mb-6">
+                      <span className="text-3xl font-medium text-black dark:text-white">✗</span>
                     </div>
-                    <p className="text-xl font-bold text-red-600 dark:text-red-400 mb-3">Game Over</p>
-                    <p className="text-sm text-slate-600 dark:text-slate-300 mb-3">The word was: <span className="font-mono font-semibold text-slate-900 dark:text-white">{word}</span></p>
-                    <p className="text-xs text-slate-500 dark:text-slate-400 mb-6">Better luck next time</p>
+                    <p className="text-xl font-medium text-black dark:text-white mb-3">Game Over</p>
+                    <p className="text-sm text-gray-600 dark:text-gray-400 mb-3 font-light">The word was: <span className="font-mono font-medium text-black dark:text-white">{word}</span></p>
+                    <p className="text-xs text-gray-500 dark:text-gray-500 mb-6 font-light">Better luck next time</p>
                     <button 
-                      className="w-full px-6 py-3 bg-red-600 hover:bg-red-700 text-white font-semibold rounded-lg transition-colors shadow-sm hover:shadow-md" 
+                      className="btn-primary w-full py-4" 
                       onClick={() => submitScore(false)}
                     >
                       Submit Score
@@ -480,7 +490,7 @@ function GameContent() {
                   </div>
                 )}
                 <button 
-                  className="w-full px-6 py-3 border border-slate-300 dark:border-slate-600 hover:bg-slate-50 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-300 font-semibold rounded-lg transition-colors" 
+                  className="btn-secondary w-full py-4" 
                   onClick={resetGame}
                 >
                   Play Again
@@ -494,9 +504,9 @@ function GameContent() {
         <div className="mt-8 flex justify-center">
           <Link 
             href="/" 
-            className="px-6 py-3 text-sm font-semibold text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white transition-colors"
+            className="btn-ghost text-sm"
           >
-            Back to Home
+            ← Back to Home
           </Link>
         </div>
       </div>
@@ -507,10 +517,10 @@ function GameContent() {
 export default function GamePage() {
   return (
     <Suspense fallback={
-      <div className="min-h-screen bg-slate-50 dark:bg-slate-900 flex items-center justify-center">
+      <div className="min-h-screen bg-white dark:bg-black flex items-center justify-center">
         <div className="text-center">
-          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-slate-900 dark:border-white mx-auto mb-4"></div>
-          <p className="text-slate-600 dark:text-slate-300 font-medium">Loading game...</p>
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-black dark:border-white mx-auto mb-4"></div>
+          <p className="text-gray-600 dark:text-gray-400 font-light">Loading game...</p>
         </div>
       </div>
     }>

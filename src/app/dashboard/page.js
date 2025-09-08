@@ -10,7 +10,7 @@ export default function DashboardPage() {
   const router = useRouter();
 
   useEffect(() => {
-    // Check if user is logged in
+    // Checking if user is logged in
     const checkAuth = async () => {
       try {
         const token = localStorage.getItem("token");

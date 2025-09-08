@@ -94,8 +94,7 @@ export async function POST(req) {
     const token = createToken(user._id.toString());
     const cookie = getSetCookieHeader(token);
 
-    // Log successful login
-    console.log(`Successful login for user: ${user._id} from IP: ${clientIP}`);
+    
 
     return NextResponse.json(
       { 

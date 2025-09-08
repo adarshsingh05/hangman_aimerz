@@ -86,31 +86,31 @@ export default function SignupPage() {
   };
 
   return (
-    <div className="min-h-screen bg-slate-50 dark:bg-slate-900 flex items-center justify-center p-6">
+    <div className="min-h-screen bg-white dark:bg-black flex items-center justify-center p-6">
       <div className="max-w-md w-full">
         {/* Header */}
-        <div className="text-center mb-10">
-          <h1 className="text-3xl font-bold text-slate-900 dark:text-white mb-3 tracking-tight">Hangman</h1>
-          <p className="text-slate-600 dark:text-slate-300 text-lg">Join the game and start competing</p>
+        <div className="text-center mb-12">
+          <h1 className="text-3xl font-light text-black dark:text-white mb-4 tracking-tight">HANGMAN</h1>
+          <p className="text-sm text-gray-600 dark:text-gray-400 font-light">Join the game and start competing</p>
         </div>
 
         {/* Signup Form */}
-        <div className="bg-white dark:bg-slate-800 rounded-xl border border-slate-200 dark:border-slate-700 p-8 shadow-lg">
-          <h2 className="text-2xl font-bold mb-8 text-center text-slate-900 dark:text-white">
+        <div className="card-elevated p-8">
+          <h2 className="text-2xl font-light mb-8 text-center text-black dark:text-white">
             Create Account
           </h2>
 
           {/* Error Display */}
           <div id="error-container"></div>
           {error && (
-            <div className="mb-6 p-4 bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-lg">
+            <div className="mb-6 p-4 bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800">
               <p className="text-red-700 dark:text-red-300 text-sm font-medium">{error}</p>
             </div>
           )}
 
           <form ref={formRef} onSubmit={handleSubmit} className="space-y-6">
             <div>
-              <label htmlFor="name" className="block text-sm font-semibold text-slate-700 dark:text-slate-300 mb-3">
+              <label htmlFor="name" className="block text-sm font-medium text-black dark:text-white mb-3">
                 Full Name
               </label>
               <input
@@ -120,10 +120,8 @@ export default function SignupPage() {
                 value={formData.name}
                 onChange={handleChange}
                 required
-                className={`w-full px-4 py-3 border rounded-lg focus:outline-none focus:ring-2 bg-white dark:bg-slate-700 text-slate-900 dark:text-white transition-colors ${
-                  fieldErrors.name 
-                    ? 'border-red-500 focus:border-red-500 focus:ring-red-500' 
-                    : 'border-slate-300 dark:border-slate-600 focus:border-slate-900 focus:ring-slate-900/20'
+                className={`input-field ${
+                  fieldErrors.name ? 'error' : ''
                 }`}
                 placeholder="Enter your full name"
               />
@@ -133,7 +131,7 @@ export default function SignupPage() {
             </div>
 
             <div>
-              <label htmlFor="email" className="block text-sm font-semibold text-slate-700 dark:text-slate-300 mb-3">
+              <label htmlFor="email" className="block text-sm font-medium text-black dark:text-white mb-3">
                 Email Address
               </label>
               <input
@@ -143,10 +141,8 @@ export default function SignupPage() {
                 value={formData.email}
                 onChange={handleChange}
                 required
-                className={`w-full px-4 py-3 border rounded-lg focus:outline-none focus:ring-2 bg-white dark:bg-slate-700 text-slate-900 dark:text-white transition-colors ${
-                  fieldErrors.email 
-                    ? 'border-red-500 focus:border-red-500 focus:ring-red-500' 
-                    : 'border-slate-300 dark:border-slate-600 focus:border-slate-900 focus:ring-slate-900/20'
+                className={`input-field ${
+                  fieldErrors.email ? 'error' : ''
                 }`}
                 placeholder="Enter your email"
               />
@@ -156,7 +152,7 @@ export default function SignupPage() {
             </div>
 
             <div>
-              <label htmlFor="password" className="block text-sm font-semibold text-slate-700 dark:text-slate-300 mb-3">
+              <label htmlFor="password" className="block text-sm font-medium text-black dark:text-white mb-3">
                 Password
               </label>
               <input
@@ -166,10 +162,8 @@ export default function SignupPage() {
                 value={formData.password}
                 onChange={handleChange}
                 required
-                className={`w-full px-4 py-3 border rounded-lg focus:outline-none focus:ring-2 bg-white dark:bg-slate-700 text-slate-900 dark:text-white transition-colors ${
-                  fieldErrors.password 
-                    ? 'border-red-500 focus:border-red-500 focus:ring-red-500' 
-                    : 'border-slate-300 dark:border-slate-600 focus:border-slate-900 focus:ring-slate-900/20'
+                className={`input-field ${
+                  fieldErrors.password ? 'error' : ''
                 }`}
                 placeholder="Create a password (min 6 characters)"
               />
@@ -179,7 +173,7 @@ export default function SignupPage() {
             </div>
 
             <div>
-              <label htmlFor="confirmPassword" className="block text-sm font-semibold text-slate-700 dark:text-slate-300 mb-3">
+              <label htmlFor="confirmPassword" className="block text-sm font-medium text-black dark:text-white mb-3">
                 Confirm Password
               </label>
               <input
@@ -189,10 +183,8 @@ export default function SignupPage() {
                 value={formData.confirmPassword}
                 onChange={handleChange}
                 required
-                className={`w-full px-4 py-3 border rounded-lg focus:outline-none focus:ring-2 bg-white dark:bg-slate-700 text-slate-900 dark:text-white transition-colors ${
-                  fieldErrors.confirmPassword 
-                    ? 'border-red-500 focus:border-red-500 focus:ring-red-500' 
-                    : 'border-slate-300 dark:border-slate-600 focus:border-slate-900 focus:ring-slate-900/20'
+                className={`input-field ${
+                  fieldErrors.confirmPassword ? 'error' : ''
                 }`}
                 placeholder="Confirm your password"
               />
@@ -204,32 +196,39 @@ export default function SignupPage() {
             <button
               type="submit"
               disabled={loading}
-              className="w-full py-3 px-4 bg-slate-900 hover:bg-slate-800 disabled:bg-slate-400 text-white font-semibold rounded-lg transition-colors"
+              className="btn-primary w-full py-4 disabled:opacity-50 disabled:cursor-not-allowed"
             >
-              {loading ? "Creating Account..." : "Create Account"}
+              {loading ? (
+                <div className="flex items-center justify-center">
+                  <div className="spinner w-4 h-4 mr-2"></div>
+                  Creating Account...
+                </div>
+              ) : (
+                "Create Account"
+              )}
             </button>
           </form>
 
           {/* Divider */}
           <div className="my-6 flex items-center">
-            <div className="flex-1 border-t border-slate-300 dark:border-slate-600"></div>
-            <span className="px-4 text-slate-500 dark:text-slate-400 text-sm font-medium">or</span>
-            <div className="flex-1 border-t border-slate-300 dark:border-slate-600"></div>
+            <div className="flex-1 border-t border-gray-300 dark:border-gray-700"></div>
+            <span className="px-4 text-gray-500 dark:text-gray-500 text-sm font-light">or</span>
+            <div className="flex-1 border-t border-gray-300 dark:border-gray-700"></div>
           </div>
 
           {/* Guest Mode */}
           <Link
             href="/game?mode=guest"
-            className="w-full py-3 px-4 border border-slate-300 dark:border-slate-600 hover:bg-slate-50 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-300 font-semibold rounded-lg transition-colors text-center block"
+            className="btn-secondary w-full py-4"
           >
             Play as Guest
           </Link>
 
           {/* Sign In Link */}
           <div className="mt-6 text-center">
-            <p className="text-sm text-slate-600 dark:text-slate-400">
+            <p className="text-sm text-gray-600 dark:text-gray-400 font-light">
               Already have an account?{" "}
-              <Link href="/login" className="text-slate-900 dark:text-white hover:text-slate-700 dark:hover:text-slate-300 font-semibold transition-colors">
+              <Link href="/login" className="text-black dark:text-white hover:text-gray-600 dark:hover:text-gray-400 font-medium transition-colors">
                 Sign in here
               </Link>
             </p>
@@ -240,9 +239,9 @@ export default function SignupPage() {
         <div className="text-center mt-6">
           <Link
             href="/"
-            className="text-sm text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white transition-colors font-medium"
+            className="btn-ghost text-sm"
           >
-            Back to Home
+            ← Back to Home
           </Link>
         </div>
       </div>

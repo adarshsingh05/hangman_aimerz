@@ -70,7 +70,7 @@ export async function POST(req) {
 
     await dbConnect();
 
-    // Check if user already exists (case-insensitive email)
+    // Checking if user already exists (case-insensitive email)
     const existingUser = await User.findOne({ email: email.toLowerCase() });
     if (existingUser) {
       console.warn(`Signup attempt with existing email: ${email} from IP: ${clientIP}`);

@@ -49,7 +49,7 @@ export default function Home() {
 
   const handleLogout = async () => {
     try {
-      // Call the logout API endpoint to properly clear the HTTP-only cookie
+      // Calling the logout API endpoint
       await fetch("/api/auth/logout", {
         method: "POST",
         headers: {
